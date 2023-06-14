@@ -1,4 +1,4 @@
-const   Terms = require('../models/terms')
+const   Terms = require('../Models/terms')
 
 
 
