@@ -2,6 +2,8 @@
 const express = require('express');
 const route = express.Router();
 
+route.use('/accessorie',require('./AccessorieRoutes'));
+
 route.use('/user',require('./UserRoutes'));
 route.use('/admin',require('./AdminRoutes'));
 route.use('/banner',require('./BannerRoutes'));
