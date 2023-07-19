@@ -9,7 +9,7 @@ exports.addBrand = async (req, res) => {
 				filename: req.file.filename,
 				filetype: req.file.mimetype,
 				filesize: req.file.size,
-				url: process.env.BASE_URL + "public/brand/" + req.file.filename
+				url: req.file.path
 			}
 
 			payload.brandImg = brandImg
@@ -78,7 +78,7 @@ exports.updateBrand = async (req, res) => {
 				filename: req.file.filename,
 				filetype: req.file.mimetype,
 				filesize: req.file.size,
-				url: process.env.BASE_URL + "public/brand/" + req.file.filename
+				url: req.file.path
 			}
 
 			payload.brandImg = brandImg

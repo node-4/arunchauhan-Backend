@@ -1,15 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const {UserController} = require('../Controller');
-const {upload_profile} = require('../MiddleWare/FileUpload');
-const {requireSignin} = require ('../MiddleWare/Auth');
-
-router.post('/register',UserController.userRegister);
-router.post('/profile',requireSignin,UserController.getUser);
-router.post('/signin',UserController.userSignin);
-router.post('/verify',UserController.registrationOtpVerification);
-router.get('/',UserController.getAllUser);
-router.put('/',requireSignin,upload_profile.single('myField'),UserController.updateUser);
+const { UserController } = require('../Controller');
+const { requireSignin } = require('../MiddleWare/Auth');
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
+cloudinary.config({ cloud_name: "dbrvq9uxa", api_key: "567113285751718", api_secret: "rjTsz9ksqzlDtsrlOPcTs_-QtW4", });
+const storage = new CloudinaryStorage({ cloudinary: cloudinary, params: { folder: "images/image", allowed_formats: ["jpg", "jpeg", "png", "PNG", "xlsx", "xls", "pdf", "PDF"], }, });
+const upload = multer({ storage: storage });
+router.post('/register', UserController.userRegister);
+router.post('/profile', requireSignin, UserController.getUser);
+router.post('/signin', UserController.userSignin);
+router.post('/verify', UserController.registrationOtpVerification);
+router.get('/', UserController.getAllUser);
+router.put('/', requireSignin, upload.single('myField'), UserController.updateUser);
 router.post('/otpsend', UserController.sendOtp);
 router.post('/change-password', UserController.changePassword);
 router.delete('/delete/:userId', UserController.DeleteUser)

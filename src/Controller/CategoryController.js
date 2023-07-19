@@ -9,7 +9,7 @@ exports.addCategory = async (req, res) => {
 				filename: req.file.filename,
 				filetype: req.file.mimetype,
 				filesize: req.file.size,
-				url: "http://ec2-15-206-210-177.ap-south-1.compute.amazonaws.com:1112/" + "public/category/" + req.file.filename
+				url: req.file.path
 			}
 
 			payload.categoryImg = categoryImg
@@ -78,7 +78,7 @@ exports.updateCategory = async (req, res) => {
 				filename: req.file.filename,
 				filetype: req.file.mimetype,
 				filesize: req.file.size,
-				url: process.env.BASE_URL + "public/category/" + req.file.filename
+				url: req.file.path
 			}
 
 			payload.categoryImg = categoryImg
@@ -127,8 +127,8 @@ exports.deleteCategory = async (req, res, next) => {
 }
 
 
-exports.getCategoryBySellerId = async(req,res, next) => {
-	try{
+exports.getCategoryBySellerId = async (req, res, next) => {
+	try {
 		let sellerId = req.params.sellerId
 		let result = await CategoryService.getCategorySellerId(sellerId)
 		if (result.success) {
@@ -145,7 +145,7 @@ exports.getCategoryBySellerId = async(req,res, next) => {
 				message: result.error
 			})
 		}
-	}catch(err){
+	} catch (err) {
 		next(err)
 	}
 }

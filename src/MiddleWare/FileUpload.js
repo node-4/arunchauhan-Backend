@@ -10,7 +10,6 @@ var storage = multer.diskStorage({
 		cb(null, 'profile' + '-' + Date.now() + path.extname(file.originalname))
 	}
 })
-
 var storage1 = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, 'src/public/banner')
@@ -38,7 +37,6 @@ var storage4 = multer.diskStorage({
 		cb(null, 'brand' + '-' + Date.now() + path.extname(file.originalname))
 	}
 })
-
 var storage5 = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, 'src/public/blog')
@@ -57,7 +55,6 @@ var storage6 = multer.diskStorage({
 		cb(null, 'product' + '-' + Date.now() + path.extname(file.originalname))
 	}
 })
-
 var storage7 = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, 'src/public/service')
@@ -76,10 +73,6 @@ var storage8 = multer.diskStorage({
 		cb(null, 'periodicService' + '-' + Date.now() + path.extname(file.originalname))
 	}
 })
-
-
-
-
 module.exports = {
 	upload_profile: multer({ storage: storage }),
 	upload_banner: multer({ storage: storage1 }),

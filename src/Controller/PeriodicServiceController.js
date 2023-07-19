@@ -11,7 +11,7 @@ exports.addPeriodicService = async (req, res) => {
         filename: req.file.filename,
         filetype: req.file.mimetype,
         filesize: req.file.size,
-        url: process.env.BASE_URL + "public/periodicservice/" + req.file.filename
+        url: req.file.path
       }
 
       payload.periodicServiceImg = periodicServiceImg
@@ -77,7 +77,7 @@ exports.updatePeriodicService = async (req, res) => {
         filename: req.file.filename,
         filetype: req.file.mimetype,
         filesize: req.file.size,
-        url: process.env.BASE_URL + "public/periodicservice/" + req.file.filename
+        url: req.file.path
       }
 
       payload.periodicServiceImg = periodicServiceImg

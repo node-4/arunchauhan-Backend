@@ -9,7 +9,7 @@ exports.addProduct = async (req, res) => {
 					filename: file.filename,
 					filesize: file.size,
 					filetype: file.mimetype,
-					url: "http://ec2-15-206-210-177.ap-south-1.compute.amazonaws.com:1112/" + "public/product/" + file.filename
+					url: req.file.path
 				}
 			})
 			payload.productImg = img
@@ -71,7 +71,7 @@ exports.updateProduct = async (req, res) => {
 					filename: file.filename,
 					filesize: file.size,
 					filetype: file.mimetype,
-					url: process.env.BASE_URL + "public/product/" + file.filename
+					url: req.file.path
 				}
 			})
 
@@ -179,15 +179,15 @@ exports.getProductByBrandId = async (req, res) => {
 	}
 }
 
-exports.statusChange = async(req,res) => {
-	try{
-	const productId = req.params.id;
-	const result = await ProductService.changeStatus(productId);
-	console.log(result)
-	res.status(200).json({
-		message: result
-	})
-	}catch(err){
+exports.statusChange = async (req, res) => {
+	try {
+		const productId = req.params.id;
+		const result = await ProductService.changeStatus(productId);
+		console.log(result)
+		res.status(200).json({
+			message: result
+		})
+	} catch (err) {
 		console.log(err);
 		res.status(400).json({
 			message: err.message
@@ -196,8 +196,8 @@ exports.statusChange = async(req,res) => {
 }
 
 
-exports.getProductSellerId = async(req,res) => {
-	try{
+exports.getProductSellerId = async (req, res) => {
+	try {
 		const sellerId = req.params.sellerId
 		const result = await ProductService.getProductSellerId(sellerId)
 		console.log(result)
@@ -216,7 +216,7 @@ exports.getProductSellerId = async(req,res) => {
 			})
 		}
 
-	}catch(err){
+	} catch (err) {
 		console.log(err);
 		res.status(400).json({
 			message: err.message

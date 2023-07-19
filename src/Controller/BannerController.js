@@ -3,8 +3,6 @@ const { BannerService } = require('../Service');
 exports.addBanner = async (req, res) => {
 	try {
 		const payload = req.body
-
-
 		const result = await BannerService.addBanner(payload)
 		if (result.status) {
 			res.status(result.status).json({
@@ -63,7 +61,7 @@ exports.updateBanner = async (req, res) => {
 				filename: req.file.filename,
 				filesize: req.file.size,
 				filetype: req.file.mimetype,
-				url: process.env.BASE_URL + "public/banner/" + req.file.filename
+				url: req.file.path
 			}
 
 			payload.banner = img

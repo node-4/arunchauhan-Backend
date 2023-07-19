@@ -98,7 +98,7 @@ exports.updateService = async (req, res) => {
 				filename: req.file.filename,
 				filetype: req.file.mimetype,
 				filesize: req.file.size,
-				url: process.env.BASE_URL + "public/service/" + req.file.filename
+				url: req.file.path
 			}
 
 			payload.serviceImg = serviceImg
@@ -148,8 +148,8 @@ exports.deleteService = async (req, res, next) => {
 	}
 }
 
-exports.getSellelerSellerId = async(req,res) => {
-	try{
+exports.getSellelerSellerId = async (req, res) => {
+	try {
 		const sellerId = req.params.sellerId
 		const result = await ServicesService.getServicesSellerId(sellerId)
 		console.log(result)
@@ -168,7 +168,7 @@ exports.getSellelerSellerId = async(req,res) => {
 			})
 		}
 
-	}catch(err){
+	} catch (err) {
 		console.log(err);
 		res.status(400).json({
 			message: err.message
