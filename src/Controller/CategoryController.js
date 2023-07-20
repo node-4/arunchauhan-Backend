@@ -3,7 +3,6 @@ const { CategoryService } = require('../Service');
 exports.addCategory = async (req, res) => {
 	try {
 		const payload = req.body
-		console.log(payload)
 		if (req.file) {
 			let categoryImg = {
 				filename: req.file.filename,
@@ -11,7 +10,7 @@ exports.addCategory = async (req, res) => {
 				filesize: req.file.size,
 				url: req.file.path
 			}
-
+			console.log(categoryImg);
 			payload.categoryImg = categoryImg
 		}
 		const result = await CategoryService.addCategory(payload)

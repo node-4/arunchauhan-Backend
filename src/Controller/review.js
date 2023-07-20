@@ -9,10 +9,8 @@ exports.AddReview = async(req,res) => {
         productId: req.body.productId, 
         rating: parseInt(req.body.rating)
     }
-    const result = await review.create(data);
-    res.status(200).json({
-        message: "Review is Added "
-    })
+    const result = await review.create(data).populate('userId', 'productId');
+    res.status(200).json({message: "Review is Added ", data:result})
     }catch(err){
         console.log(err.message);
       res.status(500).send({ msg: "internal server error ", error: err.message });

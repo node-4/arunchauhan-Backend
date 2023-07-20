@@ -10,7 +10,7 @@ cloudinary.config({ cloud_name: "dbrvq9uxa", api_key: "567113285751718", api_sec
 const storage = new CloudinaryStorage({ cloudinary: cloudinary, params: { folder: "images/image", allowed_formats: ["jpg", "jpeg", "png", "PNG", "xlsx", "xls", "pdf", "PDF"], }, });
 const upload = multer({ storage: storage });
 
-router.post('/',adminMiddleware,BannerController.addBanner);
+router.post('/',adminMiddleware,upload.single('myField'),BannerController.addBanner);
 router.get('/',BannerController.getBanner);
 router.put('/:bannerid',upload.single('myField'),BannerController.updateBanner);
 router.delete('/:bannerid',BannerController.deleteBanner);

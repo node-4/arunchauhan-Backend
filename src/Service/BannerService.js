@@ -6,10 +6,7 @@ exports.addBanner = async (payload) => {
 		result.save()
 		if (result) {
 			return {
-				success: true,
-				status: 200,
-				data: result,
-				message: "Add Banner Successfully"
+				success: true,status: 200,data: result,message: "Add Banner Successfully"
 			}
 		} else {
 			return {
