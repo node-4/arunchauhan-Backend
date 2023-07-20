@@ -13,7 +13,7 @@ exports.AddReview = async (req, res) => {
     const result = await review.create(data)
     const Review = await review.findById(result._id).populate('userId productId');
 
-    res.status(200).json({ message: "Review is Added ", data: Review })
+    res.status(200).json({status:200, message: "Review is Added ", data: Review })
   } catch (err) {
     console.log(err.message);
     res.status(500).send({ msg: "internal server error ", error: err.message });
