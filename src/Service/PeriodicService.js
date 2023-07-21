@@ -49,7 +49,7 @@ exports.getPeriodicService = async () => {
 }
 exports.getPeriodicServiceById = async (payload) => {
 	try {
-		const result = await periodicService.findById({payload})
+		const result = await periodicService.findById({_id:payload})
 		if (result) {
 			return {
 				success: true,

@@ -16,5 +16,5 @@ router.delete('/:periodicServiceid',PeriodicServiceController.deletePeriodicServ
 router.post('/review',requireSignin,PeriodicServiceController.createPeriodicServiceReview);
 router.get('/review',requireSignin,PeriodicServiceController.getPeriodicServiceReviews);
 router.delete('/review',requireSignin,PeriodicServiceController.deleteReview);
-router.get('/service/:periodicServiceid',requireSignin,PeriodicServiceController.getPeriodicServiceById);
+router.get('/service/:periodicServiceid',PeriodicServiceController.getPeriodicServiceById);
 module.exports = router
