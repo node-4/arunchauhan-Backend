@@ -1,7 +1,5 @@
 const review = require('../Models/review')
 
-
-
 exports.AddReview = async (req, res) => {
   try {
     const data = {
@@ -19,9 +17,6 @@ exports.AddReview = async (req, res) => {
     res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 }
-
-
-
 exports.getAll = async (req, res) => {
   try {
     const data = await review.find().populate('userId productId')
@@ -34,9 +29,18 @@ exports.getAll = async (req, res) => {
     res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 }
-
-
-// Get a single review by ID
+exports.getAllbyToken = async (req, res) => {
+  try {
+    const data = await review.find({userId:req.user._id}).populate('productId').populate({path:"userId",select: "profile name"})
+    res.status(200).json({
+      message: "ok",
+      data: data
+    })
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send({ msg: "internal server error ", error: err.message });
+  }
+}
 exports.getReviewById = async (req, res) => {
   try {
     const Review = await review.findById(req.params.id);
@@ -45,8 +49,6 @@ exports.getReviewById = async (req, res) => {
     console.error('Error getting review by ID:', error);
   }
 };
-
-// Update a review by ID
 exports.updateReview = async (req, res) => {
   try {
 
@@ -63,8 +65,6 @@ exports.updateReview = async (req, res) => {
     console.error('Error updating review:', error);
   }
 };
-
-// Delete a review by ID
 exports.deleteReview = async (req, res) => {
   try {
     const Review = await review.findByIdAndDelete(req.params.id);

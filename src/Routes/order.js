@@ -1,14 +1,15 @@
 const express = require('express');
 const order = require('../Controller/order');
-const {requireSignin} = require('../MiddleWare/Auth')
+const { requireSignin } = require('../MiddleWare/Auth')
 
 const router = express();
 
-router.post('/',requireSignin, order.createOrder);
+router.post('/', requireSignin, order.createOrder);
 router.get('/', order.getAllOrders);
 router.get('/:id', order.getOrderById);
 router.put('/:id', order.updateOrder);
 router.delete('/:id', order.deleteOrder);
 router.get('/getAllPaidOrder/:id', order.getAllPaidOrder)
+router.get('/getAllOrders/ByToken', requireSignin, order.getAllOrdersByToken);
 
 module.exports = router;

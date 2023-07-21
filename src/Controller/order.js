@@ -127,6 +127,16 @@ exports.getAllOrders = async (req, res) => {
     res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
+exports.getAllOrdersByToken = async (req, res) => {
+  try {
+    console.log(req.user);
+    const orders = await Order.find({ user: req.user._id }).exec();
+    res.status(200).send({ status: true, message: "Success", data: orders });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send({ msg: "internal server error ", error: err.message });
+  }
+};
 
 // Get order by ID API
 exports.getOrderById = async (req, res) => {
@@ -202,7 +212,7 @@ exports.getAllPaidOrder = async (req, res) => {
     // {
     //   //const orders = order.data
     // }
-   //console.log(orders)
+    //console.log(orders)
     console.log(orders.data)
     const order = orders.product
     //const orders = order.data
