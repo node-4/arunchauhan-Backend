@@ -47,6 +47,29 @@ exports.getPeriodicService = async () => {
 		throw error
 	}
 }
+exports.getPeriodicServiceById = async (payload) => {
+	try {
+		const result = await periodicService.findById({payload})
+		if (result) {
+			return {
+				success: true,
+				status: 200,
+				data: result,
+				message: "Successfully get"
+			}
+		} else {
+			return {
+				success: false,
+				status: 400,
+				message: "Something Went Wrong"
+			}
+		}
+
+	} catch (error) {
+		console.log(error)
+		throw error
+	}
+}
 
 
 exports.updatePeriodicService = async (periodicServiceId, payload) => {

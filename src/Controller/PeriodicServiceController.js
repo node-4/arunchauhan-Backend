@@ -39,7 +39,6 @@ exports.addPeriodicService = async (req, res) => {
     })
   }
 }
-
 exports.getPeriodicService = async (req, res) => {
   try {
     const result = await PeriodicServiceService.getPeriodicService({})
@@ -65,10 +64,6 @@ exports.getPeriodicService = async (req, res) => {
     })
   }
 }
-
-
-
-
 exports.updatePeriodicService = async (req, res) => {
   try {
     let payload = req.body;
@@ -100,7 +95,6 @@ exports.updatePeriodicService = async (req, res) => {
     throw error
   }
 }
-
 exports.deletePeriodicService = async (req, res, next) => {
   try {
     let periodicServiceId = req.params.periodicServiceid
@@ -124,7 +118,6 @@ exports.deletePeriodicService = async (req, res, next) => {
     next(error)
   }
 }
-
 exports.createPeriodicServiceReview = catchAsyncErrors(async (req, res, next) => {
   const { rating, comment, periodicServiceId } = req.body;
 
@@ -168,7 +161,6 @@ exports.createPeriodicServiceReview = catchAsyncErrors(async (req, res, next) =>
     message: "Reted Successfully"
   });
 });
-
 exports.getPeriodicServiceReviews = catchAsyncErrors(async (req, res, next) => {
   const PeriodicService = await periodicService.findById(req.query.id);
 
@@ -181,8 +173,6 @@ exports.getPeriodicServiceReviews = catchAsyncErrors(async (req, res, next) => {
     reviews: PeriodicService.reviews,
   });
 });
-
-// Delete Review
 exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
   const PeriodicService = await periodicService.findById(req.query.periodicServiceId);
 
@@ -227,3 +217,26 @@ exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
     success: true,
   });
 });
+exports.getPeriodicServiceById = async (req, res, next) => {
+  try {
+    let periodicServiceId = req.params.periodicServiceid
+    let result = await PeriodicServiceService.getPeriodicServiceById(periodicServiceId)
+    if (result.success) {
+      res.status(result.status).json({
+        success: result.success,
+        status: result.status,
+        message: result.message,
+        data: result.data
+      })
+    } else {
+      res.status(result.status).json({
+        success: result.success,
+        status: result.status,
+        message: result.error
+      })
+    }
+
+  } catch (error) {
+    next(error)
+  }
+}
