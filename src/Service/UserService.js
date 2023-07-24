@@ -1,11 +1,10 @@
-const { User, wallet, otp } = require('../Models');
+const { User, wallet, otp, userCard } = require('../Models');
 const { generateToken } = require('../Helpers/Token');
 const passwordHelper = require('../Helpers/Password');
 const { generateOTP, verifyOTP } = require('../Helpers/Otp.js');
 const { sendSms } = require('../Helpers/Sms.js');
 const { ValidationError } = require('../Errors');
 const emailHelper = require('../Helpers/Email');
-
 
 exports.userRegister = async (phoneNumber, name, password, location, vechicle) => {
 
@@ -20,8 +19,8 @@ exports.userRegister = async (phoneNumber, name, password, location, vechicle) =
 		const user = new User({
 			phone_number: phoneNumber,
 			name: name,
-			password: password, 
-			location: location, 
+			password: password,
+			location: location,
 			vechicle: vechicle
 		});
 
@@ -47,7 +46,6 @@ exports.userRegister = async (phoneNumber, name, password, location, vechicle) =
 		throw error;
 	}
 }
-
 exports.registrationOtpVerification = async (phoneNumber, otp) => {
 
 	// console.log("phoneNumber",phoneNumber,"otp",otp)
@@ -87,7 +85,6 @@ exports.registrationOtpVerification = async (phoneNumber, otp) => {
 		throw error;
 	}
 }
-
 exports.userSignin = async (payload) => {
 	try {
 		const result = await User.findOne({ phone_number: payload.phone_number });
@@ -124,7 +121,6 @@ exports.userSignin = async (payload) => {
 		throw error
 	}
 }
-
 exports.getAllUser = async () => {
 	try {
 		const result = await User.find({})
@@ -149,11 +145,10 @@ exports.getAllUser = async () => {
 	}
 
 }
-
 exports.getUser = async (userId) => {
 	try {
-		console.log("userid",userId)
-		const result = await User.findOne({_id:userId})
+		console.log("userid", userId)
+		const result = await User.findOne({ _id: userId })
 		if (result) {
 			return {
 				success: true,
@@ -175,7 +170,6 @@ exports.getUser = async (userId) => {
 	}
 
 }
-
 exports.updateUser = async (userId, payload) => {
 	try {
 		let result = await User.findOneAndUpdate({ _id: userId }, payload)
@@ -198,7 +192,6 @@ exports.updateUser = async (userId, payload) => {
 		throw error
 	}
 }
-
 exports.sendOtp = async (payload) => {
 	try {
 		console.log("hwllo")
@@ -235,7 +228,6 @@ exports.sendOtp = async (payload) => {
 		throw error
 	}
 }
-
 exports.changePassword = async (payload) => {
 	try {
 		console.log(payload)
@@ -283,9 +275,7 @@ exports.changePassword = async (payload) => {
 		console.log(error)
 	}
 }
-
-
-exports.DeleteUser = async(userId) => {
+exports.DeleteUser = async (userId) => {
 	let result = await User.findOneAndDelete({ _id: userId })
 	if (result) {
 		return {
@@ -303,3 +293,58 @@ exports.DeleteUser = async(userId) => {
 		}
 	}
 }
+exports.createPaymentCard = async (payload) => {
+	try {
+		const saved = await userCard.create(payload);
+		return { status: 200, message: "Card details saved.", data: saved }
+	} catch (err) {
+		console.log(err);
+		return { status: 501, message: "server error.", data: {}, }
+	}
+};
+exports.getPaymentCard = async (userId) => {
+	try {
+		const getData = await userCard.find({ user: userId });
+		return { status: 200, message: "Card details fetch.", data: getData }
+	} catch (err) {
+		console.log(err);
+		return { status: 501, message: "server error.", data: {}, }
+	}
+};
+exports.updatePaymentCard = async (payload) => {
+	try {
+		const payment = await userCard.findById({ _id: payload.id });
+		if (!payment) {
+			return { status: 404, message: "Card details not fetch", data: {} }
+		} else {
+			let obj = {
+				name: payload.name || payment.name,
+				number: payload.number || payment.number,
+				month: payload.month || payment.month,
+				year: payload.year || payment.year,
+				cvv: payload.cvv || payment.cvv,
+				user: payment.user,
+			}
+			let saved = await userCard.findByIdAndUpdate(payment._id, { obj }, { new: true });
+			return { status: 200, message: "Card details Updated Successfully.", data: saved }
+		}
+
+	} catch (err) {
+		console.log(err);
+		return { status: 501, message: "server error.", data: {}, }
+	}
+};
+exports.DeletePaymentCard = async (id) => {
+	try {
+		const payment = await userCard.findById(id);
+		if (!payment) {
+			return { status: 404, message: "Card details not fetch", data: {} }
+		} else {
+			const data = await userCard.findByIdAndDelete({ _id: payment._id, });
+			return { status: 200, message: "Card details Delete Successfully.", data: {} }
+		}
+	} catch (err) {
+		console.log(err);
+		return { status: 501, message: "server error.", data: {}, }
+	}
+};

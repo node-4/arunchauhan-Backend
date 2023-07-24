@@ -1,4 +1,6 @@
 const { UserService } = require('../Service');
+const User = require('../Models/User');
+
 exports.userRegister = async (req, res, next) => {
 	try {
 		const payload = req.body
@@ -122,3 +124,77 @@ exports.changePassword = async (req, res) => {
 		res.status(500).json({ message: error.message })
 	}
 }
+exports.createPaymentCard = async (req, res, next) => {
+	try {
+		console.log("-------------------", req.user);
+		const data = await User.findOne({ _id: req.user._id, });
+		if (data) {
+			let obj = {
+				user: req.user._id,
+				name: req.body.name,
+				number: req.body.number,
+				month: req.body.month,
+				year: req.body.year,
+				cvv: req.body.cvv
+			}
+			const saved = await UserService.createPaymentCard(obj);
+			res.status(200).json(saved)
+		} else {
+			return res.status(404).json({ status: 404, message: "No data found", data: {} });
+		}
+	} catch (err) {
+		console.log(err);
+		res.status(501).send({ status: 501, message: "server error.", data: {}, });
+	}
+};
+exports.getPaymentCard = async (req, res, next) => {
+	try {
+		const data = await User.findOne({ _id: req.user._id, });
+		if (data) {
+			let user = req.user._id;
+			const getData = await UserService.getPaymentCard(user)
+			res.status(200).json(getData)
+		} else {
+			return res.status(404).json({ status: 404, message: "No data found", data: {} });
+		}
+	} catch (err) {
+		console.log(err);
+		res.status(501).send({ status: 501, message: "server error.", data: {}, });
+	}
+};
+exports.updatePaymentCard = async (req, res, next) => {
+	try {
+		const data = await User.findOne({ _id: req.user._id, });
+		if (data) {
+			let name = req.body.name;
+			let number = req.body.number;
+			let month = req.body.month;
+			let year = req.body.year;
+			let cvv = req.body.cvv;
+			let id = req.params.id;
+			const getData = await UserService.updatePaymentCard({ id, name, number, month, year, cvv })
+			res.status(200).json(getData)
+		} else {
+			return res.status(404).json({ status: 404, message: "No data found", data: {} });
+		}
+	} catch (err) {
+		console.log(err);
+		res.status(501).send({ status: 501, message: "server error.", data: {}, });
+	}
+};
+exports.DeletePaymentCard = async (req, res, next) => {
+	try {
+		const data = await User.findOne({ _id: req.user._id, });
+		if (data) {
+			let id = req.params.id;
+			const data = await UserService.DeletePaymentCard(id);
+			res.status(200).json(data)
+		} else {
+			return res.status(404).json({ status: 404, message: "No data found", data: {} });
+		}
+
+	} catch (err) {
+		console.log(err);
+		res.status(501).send({ status: 501, message: "server error.", data: {}, });
+	}
+};

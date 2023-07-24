@@ -17,7 +17,9 @@ router.put('/', requireSignin, upload.single('myField'), UserController.updateUs
 router.post('/otpsend', UserController.sendOtp);
 router.post('/change-password', UserController.changePassword);
 router.delete('/delete/:userId', UserController.DeleteUser)
-
-
+router.post('/createPaymentCard', requireSignin, UserController.createPaymentCard);
+router.get('/getPaymentCard', requireSignin, UserController.getPaymentCard);
+router.put('/updatePaymentCard/:id', requireSignin, UserController.updatePaymentCard);
+router.delete('/DeletePaymentCard/:id', requireSignin, UserController.DeletePaymentCard);
 
 module.exports = router

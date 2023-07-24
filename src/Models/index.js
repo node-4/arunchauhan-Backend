@@ -14,8 +14,8 @@ module.exports = {
 	wallet: require('./Wallet'),
 	accessories: require('./Accessories'),
 	Cart: require('./Cart'),
-	Coupon: require('./Coupon')
-
+	Coupon: require('./Coupon'),
+	userCard: require('./Card')
 
 
 }
