@@ -10,19 +10,10 @@ const {
 exports.sendOTP = async (req, res) => {
   try {
     const { mobileNumber } = req.body;
-    const Installer = await installer.findOne({ mobileNumber });
-    const user = await User.findOne({ phone_number: mobileNumber });
-
-    if (user) {
-      return res
-        .status(404)
-        .json({
-          message: "this Number is already register in as User try different ",
-        });
-    }
+    const Installer = await installer.findOne({ mobile: mobileNumber });
     if (Installer) {
       return res.status(201).json({
-        message: "Mobile Number is already register login email and Password",
+        message: "Mobile Number is already register.",
       });
     }
     const otpSecret = Math.floor(100000 + Math.random() * 900000);
@@ -32,14 +23,8 @@ exports.sendOTP = async (req, res) => {
       otpSecret: otpSecret,
     };
     const result = await installer.create(data);
-    await wallet.create({
-      installer: result._id,
-      user_type: "installer",
-    });
-    console.log(result);
-    res
-      .status(200)
-      .json({ message: "OTP sent successfully", otp: result.otpSecret });
+    await wallet.create({ installer: result._id, user_type: "installer", });
+    res.status(200).json({ message: "OTP sent successfully", otp: result.otpSecret });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
