@@ -11,12 +11,10 @@ const installerSchema = mongoose.Schema({
     },
     email: {
         type: String, 
-        required: false,
-        unique: true
+        required: false
     }, 
     otpSecret: {
-        type: String,
-        unique: true, 
+        type: String, 
         require: true
     },
     mobile: {
