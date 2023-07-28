@@ -5,14 +5,12 @@ const Product = require("../Models/Product");
 exports.createOrder = async (req, res) => {
   try {
     const userId = req.user._id;
-    console.log(userId);
     const cartId = req.body.cartId;
 
-    const cart = await Cart.findOne({ /* _id: cartId,*/ user: userId })
+    const cart = await Cart.findOne({ _id: cartId, user: userId })
       .populate("products.product")
       //.populate("services.service")
       .exec();
-    console.log(cart);
 
     if (!cart)
       return res
@@ -21,90 +19,32 @@ exports.createOrder = async (req, res) => {
 
     let totalPrice = 0;
     for (const product of cart.products) {
-      const productPrice =
-        parseInt(product.product.price) * parseInt(product.quantity);
-      //  console.log(typeof productPrice);
+      const productPrice = product.product.price * product.quantity;
       totalPrice += productPrice;
     }
-    console.log(totalPrice);
 
     const order = {
       user: userId,
-      product: cart,
+      product: cart.products,
       totalPrice: totalPrice,
-      quantity: cart.products.quantity,
+      quantity: cart.products.length,
     };
-    // order.
-    //  console.log(order);
 
-    const shippingAddresss = {
+    const shippingAddress = {
       address: req.body.address,
       city: req.body.city,
       postalCode: req.body.postalCode,
       country: req.body.country,
     };
-    order.shippingAddress = shippingAddresss;
+    order.shippingAddress = shippingAddress;
 
-    order.grandTotal =
-      parseInt(totalPrice) +
-      parseInt(req.body.shippingPrice) +
-      parseInt(req.body.taxPrice);
+    order.grandTotal = totalPrice + req.body.shippingPrice + req.body.taxPrice;
 
-    let result = await Order.create(order);
-    // await Cart.updateOne(
-    //   { _id: cart._id },
-    //   { products: [] },{new:true}
-    // );
+    const result = await Order.create(order);
 
     return res
       .status(201)
       .send({ status: true, message: "Success", data: result });
-
-    //   // Create the order object
-    //   const order = new Order({
-    //     user: userId,
-    //     products: {
-    //       product: cart.products,
-    //       quantity: cart.products.quantity,
-    //       price: cart.products.product.price,
-    //     },
-    //     totalPrice: totalPrice,
-    //   });
-    //
-
-    //   const data = {
-    //     shippingPrice: req.body.shippingPrice,
-    //     taxPrice: req.body.taxPrice,
-    //   };
-    //  // console.log(data);
-    //   order.grandTotal =
-    //     parseInt(totalPrice) +
-    //     parseInt(data.shippingPrice) +
-    //     parseInt(data.taxPrice);
-    //   // Save the order and update the product stock
-    //   await order.save();
-
-    //   for (const product of cart.products) {
-    //     const productId = product.product;
-    //     const productQuantity = product.quantity;
-    //    // const price = product.product.price
-    //     const updatedProduct = await Product.findByIdAndUpdate(
-    //       productId,
-    //       { $inc: { stock: -productQuantity } },{price :price},
-    //       { new: true }
-    //     );
-    //     //console.log(updatedProduct);
-    //     // TODO: Handle case where updatedProduct is null
-    //   }
-
-    //   // Clear the cart
-    //   cart.products = [];
-    //   cart.services = [];
-    //   cart.coupon = null;
-    //   await cart.save();
-
-    //   // Return the order object to the client
-    //   res.status(201).json(order);
   } catch (err) {
     console.log(err.message);
     res.status(500).send({ msg: "internal server error ", error: err.message });

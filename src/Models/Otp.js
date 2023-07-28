@@ -8,4 +8,4 @@ const otpSchema = new Schema(
   },
   { timestamps: true }
 );
-module.exports = model("otp", otpSchema, "otp");
+module.exports = model("otp", otpSchema);

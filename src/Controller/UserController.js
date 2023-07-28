@@ -1,5 +1,8 @@
 const { UserService } = require('../Service');
 const User = require('../Models/User');
+const { sendSms } = require("../Helpers/Sms.js");
+const { generateOTP, verifyOTP } = require("../Helpers/Otp.js");
+
 
 exports.userRegister = async (req, res, next) => {
 	try {
@@ -31,6 +34,53 @@ exports.userSignin = async (req, res, next) => {
 		throw error
 	}
 }
+exports.ForgetPassword = async (req, res) => {
+	const { phone_number } = req.body;
+	try {
+		const user = await User.findOne({ phone_number }, { new: true });
+		if (!user) {
+			return res.status(404).json({ message: "Number not found" });
+		}
+		const otp = await generateOTP(6);
+
+		user.otp = {
+			magnitude: otp,
+			type: "password_reset",
+		};
+		// user.otp = otp;
+		await user.save();
+		await sendSms({
+			body: `otp is: ${otp}`,
+			phoneNumber: `${user.country_code}${user.phone_number}`,
+		});
+		res.json({ message: "OTP sent successfully", otp: otp });
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ errors: error.message });
+	}
+};
+exports.resetPasswordOTP = async (req, res) => {
+	const { phone_number, otp, password } = req.body;
+	console.log(req.body);
+
+	try {
+		const user = await User.findOne({ phone_number, otp: otp });
+		if (!user) {
+			return res.status(404).json({ message: "Invalid OTP or mobile number" });
+		}
+		const hashedPassword = await bcrypt.hash(password, 10);
+
+		user.password = hashedPassword;
+		user.otp = undefined;
+		await user.save();
+
+		res.json({
+			message: "Password reset successful",
+		});
+	} catch (error) {
+		res.status(500).json({ message: error.message });
+	}
+};
 exports.getAllUser = async (req, res) => {
 	try {
 		const result = await UserService.getAllUser()

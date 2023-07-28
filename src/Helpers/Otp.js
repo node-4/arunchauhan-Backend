@@ -7,7 +7,7 @@ exports.generateOTP = async (length) => {
     for (let i = 0; i < length; i++) {
         OTP += digits[randomInt(0, 10)];
     }
-    return "123456"
+    // return "123456"
     return OTP;
 }
 

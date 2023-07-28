@@ -53,7 +53,7 @@ exports.getCart = async (req, res, next) => {
 }
 
 
-const createCart = async (userId) => {
+exports.createCart = async (userId) => {
   try {
     const cart = await Cart.create({ user: userId });
 
@@ -63,7 +63,7 @@ const createCart = async (userId) => {
   }
 };
 
-const getCartResponse = async (cart) => {
+exports.getCartResponse = async (cart) => {
   try {
     await cart.populate([
       { path: "products.product", select: { reviews: 0 } },

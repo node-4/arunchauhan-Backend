@@ -11,6 +11,8 @@ const upload = multer({ storage: storage });
 router.post('/register', UserController.userRegister);
 router.post('/profile', requireSignin, UserController.getUser);
 router.post('/signin', UserController.userSignin);
+router.post("/forget", UserController.ForgetPassword);
+router.post("/reset", UserController.resetPasswordOTP);
 router.post('/verify', UserController.registrationOtpVerification);
 router.get('/', UserController.getAllUser);
 router.put('/', requireSignin, upload.single('myField'), UserController.updateUser);

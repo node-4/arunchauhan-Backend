@@ -86,41 +86,91 @@ exports.registrationOtpVerification = async (phoneNumber, otp) => {
 	}
 }
 exports.userSignin = async (payload) => {
-	try {
-		const result = await User.findOne({ phone_number: payload.phone_number });
-		if (result) {
-			const isValid = await passwordHelper.isValidPassword(payload.password, result.password);
-			if (isValid) {
-				const newToken = await generateToken(result, 'login');
-				console.log("result", result);
-				return {
-					success: true,
-					status: 200,
-					message: "Login successfully",
-					data: result,
-					access_token: newToken
-				}
-			} else {
-				return {
-					success: false,
-					status: 400,
-					message: "Email or password is incorrect"
-				};
-			}
-		} else {
-			return {
-				success: false,
-				status: 404,
-				message: 'User Not Found'
-			}
+  try {
+    const result = await User.findOne({ phone_number: payload.phone_number });
+    if (result) {
+      const isValid = await passwordHelper.isValidPassword(
+        payload.password,
+        result.password
+      );
+      if (isValid) {
+        const newToken = await generateToken(result._id, "login");
+        console.log("result", result);
+        return {
+          success: true,
+          status: 200,
+          message: "Login successfully",
+          data: result,
+          access_token: newToken,
+        };
+      } else {
+        return {
+          success: false,
+          status: 400,
+          message: "Email or password is incorrect",
+        };
+      }
+    } else {
+      return {
+        success: false,
+        status: 404,
+        message: "User Not Found",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+exports.ForgetPassword = async (req, res) => {
+  const { phone_number } = req.body;
+  try {
+    const user = await User.findOne({ phone_number }, { new: true });
+    if (!user) {
+      return res.status(404).json({ message: "Number not found" });
 		}
+		
+		
+		const otp = await generateOTP(6);
 
+    user.otp = {
+      magnitude: otp,
+      type: "password_reset",
+    };
+    // user.otp = otp;
+    await user.save();
+		await sendSms({
+      body: `otp is: ${otp}`,
+      phoneNumber: `${user.country_code}${user.phone_number}`,
+    });
+    res.json({ message: "OTP sent successfully", otp: otp });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ errors: error });
+  }
+};
+exports.resetPasswordOTP = async (req, res) => {
+  const { phone_number, otp, password } = req.body;
 
-	} catch (error) {
-		console.log(error)
-		throw error
-	}
-}
+  try {
+    const user = await User.findOne({ phone_number, otp: otp });
+
+    if (!user) {
+      return res.status(404).json({ message: "Invalid OTP or mobile number" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    user.password = hashedPassword;
+    user.otp = undefined;
+    await user.save();
+
+    res.json({
+      message: "Password reset successful",
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 exports.getAllUser = async () => {
 	try {
 		const result = await User.find({})
@@ -229,51 +279,45 @@ exports.sendOtp = async (payload) => {
 	}
 }
 exports.changePassword = async (payload) => {
-	try {
-		console.log(payload)
-		const result = await otp.findOne({ code: payload.code, phone_number: payload.phoneNumber });
-		console.log("ent", result)
-		if (result) {
-			let currentTime = new Date().getTime();
-			let diff = result.expireIn - currentTime
-			if (diff < 0) {
-				return {
-					success: false,
-					status: 400,
-					message: "otp expires"
-				}
-
-			} else {
-				let _user = await User.findOne({ phone_number: payload.phoneNumber });
-				console.log("_user", _user)
-				if (_user) {
-
-					payload.password = await passwordHelper.hashPassword(payload.password, 10);
-					_user.password = payload.password
-					await otp.deleteOne({
-						phone_number: result.phoneNumber
-					})
-					_user.save()
-					return {
-						success: true,
-						status: 200,
-						message: "Password Change succefully"
-
-					}
-
-				}
-			}
-		} else {
-			return {
-				success: false,
-				status: 400,
-				message: 'Something went wrong'
-			}
-		}
-	} catch (error) {
-		throw error
-		console.log(error)
-	}
+  try {
+    console.log(payload)
+    const result = await otp.findOne({ code: payload.code, phone_number: payload.phoneNumber });
+    if (result !== null) {
+      let currentTime = new Date().getTime();
+      let diff = result.expireIn - currentTime
+      if (diff < 0) {
+        return {
+          success: false,
+          status: 400,
+          message: "otp expires"
+        }
+      } else {
+        let _user = await User.findOne({ phone_number: payload.phoneNumber });
+        if (_user) {
+          payload.password = await passwordHelper.hashPassword(payload.password, 10);
+          _user.password = payload.password
+          await otp.deleteOne({
+            phone_number: result.phoneNumber,
+          });
+          _user.save()
+          return {
+            success: true,
+            status: 200,
+            message: "Password Change succefully"
+          }
+        }
+      }
+    } else {
+      return {
+        success: false,
+        status: 400,
+        message: 'Something went wrong'
+      }
+    }
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
 }
 exports.DeleteUser = async (userId) => {
 	let result = await User.findOneAndDelete({ _id: userId })

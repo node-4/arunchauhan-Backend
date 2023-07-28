@@ -4,7 +4,7 @@ const { requireSignin } = require('../MiddleWare/Auth')
 
 const router = express();
 
-router.post('/', requireSignin, order.createOrder);
+router.post('/create', requireSignin, order.createOrder);
 router.get('/', order.getAllOrders);
 router.get('/:id', order.getOrderById);
 router.put('/:id', order.updateOrder);
