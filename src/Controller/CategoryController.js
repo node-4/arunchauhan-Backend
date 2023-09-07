@@ -15,7 +15,7 @@ exports.addCategory = async (req, res) => {
 		}
 		const result = await CategoryService.addCategory(payload)
 		if (result.status) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
@@ -23,7 +23,7 @@ exports.addCategory = async (req, res) => {
 
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success
@@ -33,7 +33,7 @@ exports.addCategory = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -44,7 +44,7 @@ exports.getCategory = async (req, res,) => {
 		let result = await CategoryService.getCategory({})
 		if (result.success) {
 
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
@@ -52,7 +52,7 @@ exports.getCategory = async (req, res,) => {
 
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.message
@@ -61,7 +61,7 @@ exports.getCategory = async (req, res,) => {
 
 	} catch (error) {
 		console.log(error);
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -85,13 +85,13 @@ exports.updateCategory = async (req, res) => {
 		let categoryId = req.params.categoryid
 		let result = await CategoryService.updateCategory(categoryId, payload)
 		if (result.success) {
-			res.status(result.code).json({
+			return res.status(result.code).json({
 				success: result.success,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.code).json({
+			return res.status(result.code).json({
 				success: result.success,
 				message: result.error
 			})
@@ -106,14 +106,14 @@ exports.deleteCategory = async (req, res, next) => {
 		let categoryId = req.params.categoryid
 		let result = await CategoryService.deleteCategory(categoryId)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.error
@@ -131,14 +131,14 @@ exports.getCategoryBySellerId = async (req, res, next) => {
 		let sellerId = req.params.sellerId
 		let result = await CategoryService.getCategorySellerId(sellerId)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.error

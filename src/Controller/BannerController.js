@@ -8,7 +8,7 @@ exports.addBanner = async (req, res) => {
 		}
 		const result = await BannerService.addBanner(payload)
 		if (result.status) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
@@ -16,7 +16,7 @@ exports.addBanner = async (req, res) => {
 
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: success
@@ -24,7 +24,7 @@ exports.addBanner = async (req, res) => {
 		}
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -34,7 +34,7 @@ exports.getBanner = async (req, res,) => {
 	try {
 		let result = await BannerService.getBanner({})
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
@@ -42,7 +42,7 @@ exports.getBanner = async (req, res,) => {
 
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
@@ -50,7 +50,7 @@ exports.getBanner = async (req, res,) => {
 		}
 	} catch (error) {
 		console.log(error);
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -72,13 +72,13 @@ exports.updateBanner = async (req, res) => {
 		let bannerId = req.params.bannerid
 		let result = await BannerService.updateBanner(bannerId, payload)
 		if (result.success) {
-			res.status(result.code).json({
+			return res.status(result.code).json({
 				success: result.success,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.code).json({
+			return res.status(result.code).json({
 				success: result.success,
 				message: result.error
 			})
@@ -93,14 +93,14 @@ exports.deleteBanner = async (req, res, next) => {
 		let bannerId = req.params.bannerid
 		let result = await BannerService.deleteBanner(bannerId)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.error

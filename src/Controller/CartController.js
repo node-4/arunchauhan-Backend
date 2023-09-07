@@ -10,10 +10,10 @@ exports.addToCart = async (req, res, next) => {
       user: req.user._id,
     });
 
-   // console.log("cart", cart)
+    // console.log("cart", cart)
 
-    if (!cart) { 
-      cart = await createCart(req.user._id);
+    if (!cart) {
+      cart = await Cart.create({ user: req.user._id });
     }
 
     const productIndex = cart.products.findIndex((cartProduct) => {
@@ -63,7 +63,7 @@ exports.createCart = async (userId) => {
   }
 };
 
-exports.getCartResponse = async (cart) => {
+const getCartResponse = async (cart) => {
   try {
     await cart.populate([
       { path: "products.product", select: { reviews: 0 } },

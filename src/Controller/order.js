@@ -47,7 +47,7 @@ exports.createOrder = async (req, res) => {
       .send({ status: true, message: "Success", data: result });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ msg: "internal server error ", error: err.message });
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
 
@@ -61,20 +61,20 @@ exports.createOrder = async (req, res) => {
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().exec();
-    res.status(200).send({ status: true, message: "Success", data: orders });
+    return res.status(200).send({ status: true, message: "Success", data: orders });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ msg: "internal server error ", error: err.message });
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
 exports.getAllOrdersByToken = async (req, res) => {
   try {
     console.log(req.user);
     const orders = await Order.find({ user: req.user._id }).exec();
-    res.status(200).send({ status: true, message: "Success", data: orders });
+    return res.status(200).send({ status: true, message: "Success", data: orders });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ msg: "internal server error ", error: err.message });
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
 
@@ -88,10 +88,10 @@ exports.getOrderById = async (req, res) => {
         message: `No order found with ID ${req.params.id}`,
       });
     }
-    res.status(200).send({ status: true, message: "Success", data: order });
+    return res.status(200).send({ status: true, message: "Success", data: order });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ msg: "internal server error ", error: err.message });
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
 
@@ -119,12 +119,10 @@ exports.updateOrder = async (req, res) => {
 
     const updatedOrder = await order.save();
 
-    res
-      .status(200)
-      .send({ status: true, message: "Success", data: updatedOrder });
+    return res.status(200).send({ status: true, message: "Success", data: updatedOrder });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ msg: "internal server error ", error: err.message });
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
 
@@ -138,10 +136,10 @@ exports.deleteOrder = async (req, res) => {
         message: `No order found with ID ${req.params.id}`,
       });
     }
-    res.status(200).send({ status: true, message: "Success", data: order });
+    return res.status(200).send({ status: true, message: "Success", data: order });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ msg: "internal server error ", error: err.message });
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
 
@@ -209,7 +207,7 @@ exports.getAllPaidOrder = async (req, res) => {
     // res.status(200).send({ status: true, message: "Success", data: order });
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ msg: "internal server error ", error: err.message });
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
 

@@ -6,7 +6,7 @@ exports.adminSignup = async (req, res) => {
 		console.log(req.body)
 		let result = await AdminService.adminSignup(payload)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
@@ -14,7 +14,7 @@ exports.adminSignup = async (req, res) => {
 				token: result.access_token
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status
@@ -22,7 +22,7 @@ exports.adminSignup = async (req, res) => {
 		}
 
 	} catch (error) {
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -36,14 +36,14 @@ exports.adminSignin = async (req, res, next) => {
 		// console.log(result)
 		if (result.success) {
 
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				message: result.message,
 				token: result.access_token
 			})
 		}
 		else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: false,
 				message: result.message
 			})
@@ -59,7 +59,7 @@ exports.sendMail = async (req, res) => {
 		let result = await AdminService.sendMail(payload)
 		console.log(result)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				message: result.message,
 				// data:result.data,
@@ -67,7 +67,7 @@ exports.sendMail = async (req, res) => {
 			})
 		}
 		else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: false,
 				message: result.message
 			})
@@ -75,7 +75,7 @@ exports.sendMail = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -86,14 +86,14 @@ exports.changePassword = async (req, res) => {
 		const payload = req.body
 		let result = await AdminService.changePassword(payload)
 		if (result.status) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				message: result.message,
 				data: result.data
 			})
 		}
 		else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: false,
 				message: result.message
 			})
@@ -101,7 +101,7 @@ exports.changePassword = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}

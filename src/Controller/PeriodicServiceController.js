@@ -18,14 +18,14 @@ exports.addPeriodicService = async (req, res) => {
     }
     const result = await PeriodicServiceService.addperiodicService(payload)
     if (result) {
-      res.status(result.status).json({
+      return res.status(result.status).json({
         message: result.message,
         success: result.success,
         status: result.status,
         data: result.data
       })
     } else {
-      res.status(result.status).json({
+      return res.status(result.status).json({
         message: result.message,
         success: result.success,
         status: result.status
@@ -43,14 +43,14 @@ exports.getPeriodicService = async (req, res) => {
   try {
     const result = await PeriodicServiceService.getPeriodicService({})
     if (result.success) {
-      res.status(result.status).json({
+      return res.status(result.status).json({
         message: result.message,
         status: result.status,
         success: result.success,
         data: result.data,
       })
     } else {
-      res.status(res.status).json({
+      return res.status(res.status).json({
         message: result.message,
         status: result.status,
         success: result.success
@@ -80,13 +80,13 @@ exports.updatePeriodicService = async (req, res) => {
     let periodicServiceId = req.params.periodicServiceid
     let result = await PeriodicServiceService.updatePeriodicService(periodicServiceId, payload)
     if (result.success) {
-      res.status(result.code).json({
+      return res.status(result.code).json({
         success: result.success,
         message: result.message,
         data: result.data
       })
     } else {
-      res.status(result.code).json({
+      return res.status(result.code).json({
         success: result.success,
         message: result.error
       })
@@ -100,14 +100,14 @@ exports.deletePeriodicService = async (req, res, next) => {
     let periodicServiceId = req.params.periodicServiceid
     let result = await PeriodicServiceService.deletePeriodicService(periodicServiceId)
     if (result.success) {
-      res.status(result.status).json({
+      return res.status(result.status).json({
         success: result.success,
         status: result.status,
         message: result.message,
         data: result.data
       })
     } else {
-      res.status(result.status).json({
+      return res.status(result.status).json({
         success: result.success,
         status: result.status,
         message: result.error
@@ -222,14 +222,14 @@ exports.getPeriodicServiceById = async (req, res, next) => {
     let periodicServiceId = req.params.periodicServiceid
     let result = await PeriodicServiceService.getPeriodicServiceById(periodicServiceId)
     if (result.success) {
-      res.status(result.status).json({
+      return res.status(result.status).json({
         success: result.success,
         status: result.status,
         message: result.message,
         data: result.data
       })
     } else {
-      res.status(result.status).json({
+      return res.status(result.status).json({
         success: result.success,
         status: result.status,
         message: result.error

@@ -15,14 +15,14 @@ exports.addService = async (req, res) => {
 		// }
 		const result = await ServicesService.addService(payload)
 		if (result) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status
@@ -31,7 +31,7 @@ exports.addService = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -41,14 +41,14 @@ exports.getService = async (req, res) => {
 	try {
 		const result = await ServicesService.getService({})
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success,
 				data: result.data,
 			})
 		} else {
-			res.status(res.status).json({
+			return res.status(res.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success
@@ -57,7 +57,7 @@ exports.getService = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -68,14 +68,14 @@ exports.getServiceByServiceTypeId = async (req, res) => {
 		const serviceTypeId = req.params.ServiceTypeid
 		const result = await ServicesService.getServiceByServiceTypeId(serviceTypeId)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success,
 				data: result.data,
 			})
 		} else {
-			res.status(res.status).json({
+			return res.status(res.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success
@@ -84,7 +84,7 @@ exports.getServiceByServiceTypeId = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -106,14 +106,14 @@ exports.updateService = async (req, res) => {
 		let ServiceId = req.params.serviceid
 		let result = await ServicesService.updateServices(ServiceId, payload)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				message: result.error
 			})
@@ -129,14 +129,14 @@ exports.deleteService = async (req, res, next) => {
 		let ServiceId = req.params.serviceid
 		let result = await ServicesService.deleteService(ServiceId)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.error
@@ -154,14 +154,14 @@ exports.getSellelerSellerId = async (req, res) => {
 		const result = await ServicesService.getServicesSellerId(sellerId)
 		console.log(result)
 		if (result.status) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success
@@ -170,7 +170,7 @@ exports.getSellelerSellerId = async (req, res) => {
 
 	} catch (err) {
 		console.log(err);
-		res.status(400).json({
+		return res.status(400).json({
 			message: err.message
 		})
 	}

@@ -17,7 +17,7 @@ exports.addProduct = async (req, res) => {
 
 		const result = await ProductService.addProduct(payload)
 		if (result.status) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
@@ -27,7 +27,7 @@ exports.addProduct = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -36,14 +36,14 @@ exports.getProduct = async (req, res) => {
 	try {
 		const result = await ProductService.getProduct({})
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success,
 				data: result.data,
 			})
 		} else {
-			res.status(res.status).json({
+			return res.status(res.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success
@@ -52,7 +52,7 @@ exports.getProduct = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -81,13 +81,13 @@ exports.updateProduct = async (req, res) => {
 		let productId = req.params.productid
 		let result = await ProductService.updateProduct(productId, payload)
 		if (result.success) {
-			res.status(result.code).json({
+			return res.status(result.code).json({
 				success: result.success,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.code).json({
+			return res.status(result.code).json({
 				success: result.success,
 				message: result.error
 			})
@@ -102,14 +102,14 @@ exports.deleteProduct = async (req, res, next) => {
 		let productId = req.params.productid
 		let result = await ProductService.deleteProduct(productId)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.error
@@ -128,14 +128,14 @@ exports.getProductByCategoryId = async (req, res) => {
 		const result = await ProductService.getProductByCategoryId(categoryId)
 		console.log(result)
 		if (result.status) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success
@@ -144,7 +144,7 @@ exports.getProductByCategoryId = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -157,14 +157,14 @@ exports.getProductByBrandId = async (req, res) => {
 		const result = await ProductService.getProductByBrandId(brandId)
 		console.log(result)
 		if (result.status) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success
@@ -173,7 +173,7 @@ exports.getProductByBrandId = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -184,12 +184,12 @@ exports.statusChange = async (req, res) => {
 		const productId = req.params.id;
 		const result = await ProductService.changeStatus(productId);
 		console.log(result)
-		res.status(200).json({
+		return res.status(200).json({
 			message: result
 		})
 	} catch (err) {
 		console.log(err);
-		res.status(400).json({
+		return res.status(400).json({
 			message: err.message
 		})
 	}
@@ -202,14 +202,14 @@ exports.getProductSellerId = async (req, res) => {
 		const result = await ProductService.getProductSellerId(sellerId)
 		console.log(result)
 		if (result.status) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success
@@ -218,7 +218,7 @@ exports.getProductSellerId = async (req, res) => {
 
 	} catch (err) {
 		console.log(err);
-		res.status(400).json({
+		return res.status(400).json({
 			message: err.message
 		})
 	}

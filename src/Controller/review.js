@@ -11,34 +11,34 @@ exports.AddReview = async (req, res) => {
     const result = await review.create(data)
     const Review = await review.findById(result._id).populate('userId productId');
 
-    res.status(200).json({status:200, message: "Review is Added ", data: Review })
+    return res.status(200).json({ status: 200, message: "Review is Added ", data: Review })
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ msg: "internal server error ", error: err.message });
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 }
 exports.getAll = async (req, res) => {
   try {
     const data = await review.find().populate('userId productId')
-    res.status(200).json({
+    return res.status(200).json({
       message: "ok",
       data: data
     })
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ msg: "internal server error ", error: err.message });
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 }
 exports.getAllbyToken = async (req, res) => {
   try {
-    const data = await review.find({userId:req.user._id}).populate('productId').populate({path:"userId",select: "profile name"})
-    res.status(200).json({
+    const data = await review.find({ userId: req.user._id }).populate('productId').populate({ path: "userId", select: "profile name" })
+    return res.status(200).json({
       message: "ok",
       data: data
     })
   } catch (err) {
     console.log(err.message);
-    res.status(500).send({ msg: "internal server error ", error: err.message });
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 }
 exports.getReviewById = async (req, res) => {

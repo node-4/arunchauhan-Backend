@@ -16,7 +16,7 @@ exports.addBrand = async (req, res) => {
 		}
 		const result = await BrandService.addBrand(payload)
 		if (result.status) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
@@ -24,7 +24,7 @@ exports.addBrand = async (req, res) => {
 
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: success
@@ -34,7 +34,7 @@ exports.addBrand = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -45,7 +45,7 @@ exports.getBrand = async (req, res,) => {
 		let result = await BrandService.getBrand({})
 		if (result.success) {
 
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
@@ -53,7 +53,7 @@ exports.getBrand = async (req, res,) => {
 
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
@@ -62,7 +62,7 @@ exports.getBrand = async (req, res,) => {
 
 	} catch (error) {
 		console.log(error);
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -86,14 +86,14 @@ exports.updateBrand = async (req, res) => {
 		let brandId = req.params.brandid
 		let result = await BrandService.updateBrand(brandId, payload)
 		if (result.success) {
-			res.status(result.code).json({
+			return res.status(result.code).json({
 				success: result.success,
 				status: result.code,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.code).json({
+			return res.status(result.code).json({
 				success: result.success,
 				status: result.code,
 				message: result.error
@@ -109,14 +109,14 @@ exports.deleteBrand = async (req, res, next) => {
 		let brandId = req.params.brandid
 		let result = await BrandService.deleteBrand(brandId)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.error

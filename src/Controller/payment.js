@@ -110,7 +110,7 @@ exports.CreatePayment = async (req, res) => {
     return res.status(200).json(AmountData);
   } catch (err) {
     console.log(err);
-    res.status(400).send({ message: err.message });
+    return res.status(400).send({ message: err.message });
   }
 };
 
@@ -179,7 +179,7 @@ exports.updatePayment = async (req, res) => {
     return res.status(200).send(updateData);
   } catch (err) {
     console.log(err);
-    res.status(400).send({ message: err.message });
+    return res.status(400).send({ message: err.message });
   }
 };
 

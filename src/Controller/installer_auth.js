@@ -24,9 +24,9 @@ exports.sendOTP = async (req, res) => {
     };
     const result = await installer.create(data);
     await wallet.create({ installer: result._id, user_type: "installer", });
-    res.status(200).json({ message: "OTP sent successfully", otp: result.otpSecret });
+    return res.status(200).json({ message: "OTP sent successfully", otp: result.otpSecret });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -46,9 +46,9 @@ exports.login = async (req, res) => {
     }
     const token = jwt.sign({ userId: user._id }, process.env.SECRETKEY);
 
-    res.status(201).json({ token: token, InstallerId: user._id });
+    return res.status(201).json({ token: token, InstallerId: user._id });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -87,7 +87,7 @@ exports.verifyOTP = async (req, res) => {
       .status(200)
       .json({ message: "Otp Verify ", token: token, userId: user._id });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -108,24 +108,24 @@ exports.UpdateProfile = async (req, res) => {
       Esec: req.body.Esec,
     };
     result.save();
-    res.status(200).json({
+    return res.status(200).json({
       message: "ok",
       result: result,
     });
   } catch (err) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
 exports.DeleteInsteller = async (req, res) => {
   try {
     await installer.findByIdAndDelete({ _id: req.params.id });
-    res.status(200).json({
+    return res.status(200).json({
       message: "Insteller is Deleted ",
     });
   } catch (err) {
     console.log(err);
-    res.status(400).json({
+    return res.status(400).json({
       message: err.message,
     });
   }
@@ -141,13 +141,13 @@ exports.Address = async (req, res) => {
       Radius: req.body.Radius,
     };
     result.save();
-    res.status(200).json({
+    return res.status(200).json({
       message: "ok",
       result: result,
     });
   } catch (err) {
     console.log(err);
-    res.status(400).json({
+    return res.status(400).json({
       message: err.message,
     });
   }
@@ -158,13 +158,13 @@ exports.AddServices = async (req, res) => {
     const result = await installer.findById({ _id: req.params.id });
     result.servies = req.body.servies;
     result.save();
-    res.status(200).json({
+    return res.status(200).json({
       message: "ok",
       result: result,
     });
   } catch (err) {
     console.log(err);
-    res.status(400).json({
+    return res.status(400).json({
       message: err.message,
     });
   }
@@ -173,13 +173,13 @@ exports.AddServices = async (req, res) => {
 exports.getAllInstaller = async (req, res) => {
   try {
     const result = await installer.find();
-    res.status(200).json({
+    return res.status(200).json({
       message: "ok",
       result: result,
     });
   } catch (err) {
     console.log(err);
-    res.status(400).json({
+    return res.status(400).json({
       message: err.message,
     });
   }
@@ -188,13 +188,13 @@ exports.getAllInstaller = async (req, res) => {
 exports.getByInstallerId = async (req, res) => {
   try {
     const result = await installer.findById({ _id: req.params.id });
-    res.status(200).json({
+    return res.status(200).json({
       message: "ok",
       result: result,
     });
   } catch (err) {
     console.log(err);
-    res.status(400).json({
+    return res.status(400).json({
       message: err.message,
     });
   }

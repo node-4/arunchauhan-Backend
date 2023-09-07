@@ -5,7 +5,7 @@ exports.addServiceType = async (req, res) => {
 		const payload = req.body
 		const result = await ServiceTypeService.addServiceType(payload)
 		if (result) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				success: result.success,
 				status: result.status,
@@ -21,7 +21,7 @@ exports.addServiceType = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 
@@ -32,14 +32,14 @@ exports.getServiceType = async (req, res) => {
 	try {
 		const result = await ServiceTypeService.getServiceType({})
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success,
 				data: result.data,
 			})
 		} else {
-			res.status(res.status).json({
+			return res.status(res.status).json({
 				message: result.message,
 				status: result.status,
 				success: result.success
@@ -48,7 +48,7 @@ exports.getServiceType = async (req, res) => {
 
 	} catch (error) {
 		console.log(error)
-		res.status(500).json({
+		return res.status(500).json({
 			message: error.message
 		})
 	}
@@ -61,14 +61,14 @@ exports.updateServiceType = async (req, res) => {
 		let ServiceTypeId = req.params.id
 		let result = await ServiceTypeService.updateServiceType(ServiceTypeId, payload)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				message: result.error
 			})
@@ -84,14 +84,14 @@ exports.deleteServiceType = async (req, res, next) => {
 		let ServiceTypeId = req.params.ServiceTypeid
 		let result = await ServiceTypeService.deleteServiceType(ServiceTypeId)
 		if (result.success) {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.message,
 				data: result.data
 			})
 		} else {
-			res.status(result.status).json({
+			return res.status(result.status).json({
 				success: result.success,
 				status: result.status,
 				message: result.error

@@ -11,7 +11,7 @@ env.config()
 connection()
 
 app.get('/', (req, res) => {
-res.status(200).send("This is pitzon API on Node js")
+    return res.status(200).send("This is pitzon API on Node js")
 })
 app.use(cors());
 app.use(express.json({ limit: "25mb" }));
@@ -23,7 +23,7 @@ app.use(handler.invalidRoute, handler.errorHandler);
 app.use((err, req, res, next) => {
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
-  
+
     // render the error page
     res.status(err.status || 500);
     if (err.status) {
@@ -48,7 +48,7 @@ app.use((err, req, res, next) => {
 
 
 app.listen(process.env.PORT, () => {
-	console.log(`Your server is Running on port ${process.env.PORT}`)
+    console.log(`Your server is Running on port ${process.env.PORT}`)
 })
 
 module.exports = {

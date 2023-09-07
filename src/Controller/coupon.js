@@ -4,10 +4,10 @@ exports.createCoupon = async (req, res) => {
   try {
     const coupon = new Coupon(req.body);
     const result = await coupon.save();
-    res.json(result);
+    return res.json(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server Error');
+    return res.status(500).send('Server Error');
   }
 };
 
@@ -17,7 +17,7 @@ exports.getCoupons = async (req, res) => {
     res.json(coupons);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server Error');
+    return res.status(500).send('Server Error');
   }
 };
 
@@ -28,7 +28,7 @@ exports.getCouponById = async (req, res) => {
     res.json(coupon);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server Error');
+    return res.status(500).send('Server Error');
   }
 };
 
@@ -42,7 +42,7 @@ exports.updateCoupon = async (req, res) => {
     res.json(coupon);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server Error');
+    return res.status(500).send('Server Error');
   }
 };
 
@@ -53,6 +53,6 @@ exports.deleteCoupon = async (req, res) => {
     res.json({ message: 'Coupon deleted successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Server Error');
+    return res.status(500).send('Server Error');
   }
 };
