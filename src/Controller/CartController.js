@@ -7,15 +7,22 @@ exports.addToCart = async (req, res, next) => {
   try {
     const product = req.params.id;
     let cart = await Cart.findOne({ user: req.user._id, });
-    if (!cart) { cart = await Cart.create({ user: req.user._id }); }
-    const productIndex = cart.products.findIndex((cartProduct) => { return cartProduct.product.toString() == product; });
-    if (productIndex < 0) {
-      cart.products.push({ product });
+    if (!cart) {
+      cart = await Cart.create({ user: req.user._id });
     } else {
-      cart.products[productIndex].quantity++;
+      if (cart.services.length == 0) {
+        const productIndex = cart.products.findIndex((cartProduct) => { return cartProduct.product.toString() == product; });
+        if (productIndex < 0) {
+          cart.products.push({ product });
+        } else {
+          cart.products[productIndex].quantity++;
+        }
+        await cart.save();
+        return res.status(200).json({ msg: "product added to cart", });
+      } else {
+        return res.status(200).json({ msg: "First Remove service from cart.", });
+      }
     }
-    await cart.save();
-    return res.status(200).json({ msg: "product added to cart", });
   } catch (error) {
     next(error);
   }
@@ -35,8 +42,6 @@ exports.getCart = async (req, res, next) => {
     next(error);
   }
 }
-
-
 exports.createCart = async (userId) => {
   try {
     const cart = await Cart.create({ user: userId });
@@ -79,15 +84,23 @@ exports.addServiceToCart = async (req, res, next) => {
   try {
     const services = req.params.id;
     let cart = await Cart.findOne({ user: req.user._id, });
-    if (!cart) { cart = await Cart.create({ user: req.user._id }); }
-    const productIndex = cart.services.findIndex((cartService) => { return cartService.service.toString() == services; });
-    if (productIndex < 0) {
-      cart.services.push({ services });
+    if (!cart) {
+      cart = await Cart.create({ user: req.user._id });
     } else {
-      cart.services[productIndex].quantity++;
+      if (cart.products.length == 0) {
+        const productIndex = cart.services.findIndex((cartService) => { return cartService.service.toString() == services; });
+        if (productIndex < 0) {
+          cart.services.push({ services });
+        } else {
+          cart.services[productIndex].quantity++;
+        }
+        await cart.save();
+        return res.status(200).json({ msg: "product added to cart", data: cart });
+      } else {
+        return res.status(200).json({ msg: "First Remove service from cart.", });
+      }
     }
-    await cart.save();
-    return res.status(200).json({ msg: "product added to cart", data: cart });
+
   } catch (error) {
     next(error);
   }
