@@ -5,43 +5,38 @@ const orderSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "user",
   },
-  product: [],
   quantity: {
     type: Number
   },
-  products: [
-    {
-      product: {
-        type: Schema.Types.ObjectId,
-        ref: "product",
-      },
-      quantity: {
-        type: Number,
-        default: 0,
-      },
-      price: {
-        type: Number,
-        default: 0,
-      },
+  products: [{
+    product: {
+      type: Schema.Types.ObjectId,
+      ref: "product",
     },
-  ],
+    quantity: {
+      type: Number,
+      default: 0,
+    },
+    price: {
+      type: Number,
+      default: 0,
+    },
+  }],
 
-  services: [
-    {
-      product: {
-        type: Schema.Types.ObjectId,
-        ref: "Services",
-      },
-      quantity: {
-        type: Number,
-        default: 0,
-      },
-      price: {
-        type: Number,
-        default: 0,
-      },
+  services: [{
+    product: {
+      type: Schema.Types.ObjectId,
+      ref: "Services",
     },
-  ],
+    quantity: {
+      type: Number,
+      default: 0,
+    },
+    price: {
+      type: Number,
+      default: 0,
+    }
+  }],
 
   shippingAddress: {
     address: {
@@ -107,6 +102,25 @@ const orderSchema = new Schema({
     type: Number,
   },
   Status: {
+    type: String
+  },
+  orderType: {
+    type: String,
+    enum: ['Product', 'Service']
+  },
+  orderStatus: {
+    type: String,
+    enum: ['Pending', 'Accept', "Complete"]
+  },
+  instellers: [{
+    type: Schema.Types.ObjectId,
+    ref: "insteller",
+  }],
+  instellerId: {
+    type: Schema.Types.ObjectId,
+    ref: "insteller",
+  },
+  paymentStatus: {
     type: String
   },
 }, {

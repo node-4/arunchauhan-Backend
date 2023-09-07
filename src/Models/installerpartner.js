@@ -1,42 +1,46 @@
-const mongoose = require('mongoose');
+const { model, Schema } = require("mongoose");
 
-const installingpartnerSchema = mongoose.Schema({
-    businessName: {
-        type: String 
+const installingpartnerSchema = new Schema({
+    insteller: {
+        type: Schema.Types.ObjectId,
+        ref: "insteller",
     },
-    businessContactNumber:{
-        type:String
+    businessName: {
+        type: String
+    },
+    businessContactNumber: {
+        type: String
     },
     businessEmail: {
-        type: String, 
-    }, 
-    activeGstNumber:{
-        type:String
+        type: String,
     },
-    GstNumber:{
-        type:Number
+    activeGstNumber: {
+        type: String
     },
-    businessAddress:{
-        type:String
+    GstNumber: {
+        type: Number
     },
-    panCardNumber:{
-        type:Number
+    businessAddress: {
+        type: String
     },
-    frontSidePanCard:{
-        type:String
+    panCardNumber: {
+        type: Number
     },
-    personalName:{
-        type:String
+    frontSidePanCard: {
+        type: String
     },
-    personalemail:{
-        type:String
+    personalName: {
+        type: String
     },
-    personalNumber:{
-        type:String
+    personalemail: {
+        type: String
     },
-    personaladdress:{
-        type:String
+    personalNumber: {
+        type: String
+    },
+    personaladdress: {
+        type: String
     }
 })
 
-module.exports = mongoose.model('instellingpartner', installingpartnerSchema)
+module.exports = model('instellingpartner', installingpartnerSchema)

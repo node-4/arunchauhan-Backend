@@ -11,5 +11,10 @@ router.put('/:id', order.updateOrder);
 router.delete('/:id', order.deleteOrder);
 router.get('/getAllPaidOrder/:id', order.getAllPaidOrder)
 router.get('/getAllOrders/ByToken', requireSignin, order.getAllOrdersByToken);
+router.get('/getInvitation/:instellerId', order.getInvitation);
+router.get('/getBooking/:instellerId', order.getUpcommingBooking);
+router.get('/getOrder/:instellerId', order.getBooking);
+router.put('/acceptInvitation/:instellerId', order.acceptInvitation);
+router.put('/rejectInvitation/:instellerId', order.rejectInvitation);
 
 module.exports = router;

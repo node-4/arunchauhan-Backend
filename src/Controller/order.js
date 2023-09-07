@@ -1,35 +1,60 @@
 const Order = require("../Models/order");
 const Cart = require("../Models/Cart");
+const installer = require("../Models/installer_auth");
 
 exports.createOrder = async (req, res) => {
   try {
     const userId = req.user._id;
-    const cartId = req.body.cartId;
-
-    const cart = await Cart.findOne({ _id: cartId, user: userId }).populate("products.product").populate("services.service").exec();
-    if (!cart)
+    const cart = await Cart.findOne({ user: userId }).populate("products.product").populate("services.services").exec();
+    if (!cart) {
       return res.status(404).send({ status: false, message: `No such cart exist for ${userId}` });
-    let totalPrice = 0;
-    for (const product of cart.products) {
-      const productPrice = product.product.price * product.quantity;
-      totalPrice += productPrice;
+    } else {
+      if (cart.products.length > 0) {
+        let totalPrice = 0;
+        for (const product of cart.products) {
+          const productPrice = product.product.price * product.quantity;
+          totalPrice += productPrice;
+        }
+        const order = { user: userId, product: cart.products, totalPrice: totalPrice, quantity: cart.products.length, };
+        const shippingAddress = {
+          address: req.body.address,
+          city: req.body.city,
+          postalCode: req.body.postalCode,
+          country: req.body.country,
+        };
+        order.shippingAddress = shippingAddress;
+        order.grandTotal = totalPrice;
+        order.orderType = "Product"
+        const result = await Order.create(order);
+        return res.status(201).send({ status: true, message: "Success", data: result });
+      }
+      if (cart.services.length > 0) {
+        let totalPrice = 0, instellers = [];
+        const findInstaller = await installer.find({});
+        if (findInstaller.length > 0) {
+          for (let i = 0; i < findInstaller.length; i++) {
+            instellers.push(findInstaller[i]._id)
+          }
+        }
+        for (const product of cart.services) {
+          const productPrice = product.services.price * product.quantity;
+          totalPrice += productPrice;
+        }
+        const order = { user: userId, services: cart.services, totalPrice: totalPrice, quantity: cart.services.length, };
+        const shippingAddress = {
+          address: req.body.address,
+          city: req.body.city,
+          postalCode: req.body.postalCode,
+          country: req.body.country,
+        };
+        order.shippingAddress = shippingAddress;
+        order.grandTotal = totalPrice;
+        order.orderType = "Service"
+        order.instellers = instellers
+        const result = await Order.create(order);
+        return res.status(201).send({ status: true, message: "Success", data: result });
+      }
     }
-    const order = {
-      user: userId,
-      product: cart.products,
-      totalPrice: totalPrice,
-      quantity: cart.products.length,
-    };
-    const shippingAddress = {
-      address: req.body.address,
-      city: req.body.city,
-      postalCode: req.body.postalCode,
-      country: req.body.country,
-    };
-    order.shippingAddress = shippingAddress;
-    order.grandTotal = totalPrice + req.body.shippingPrice + req.body.taxPrice;
-    const result = await Order.create(order);
-    return res.status(201).send({ status: true, message: "Success", data: result });
   } catch (err) {
     console.log(err.message);
     return res.status(500).send({ msg: "internal server error ", error: err.message });
@@ -276,3 +301,59 @@ exports.getAllPaidOrder = async (req, res) => {
 // }
 
 // module.exports={createOrder,updateOrder}
+
+exports.getInvitation = async (req, res) => {
+  try {
+    const orders = await Order.find({ instellers: { $in: req.params.instellerId }, orderType: "Service", orderStatus: "Pending" }).exec();
+    return res.status(200).send({ status: true, message: "Success", data: orders });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
+  }
+};
+exports.getUpcommingBooking = async (req, res) => {
+  try {
+    const orders = await Order.find({ instellerId: req.params.instellerId, orderStatus: "Accept" }).exec();
+    return res.status(200).send({ status: true, message: "Success", data: orders });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
+  }
+};
+exports.getBooking = async (req, res) => {
+  try {
+    const orders = await Order.find({ instellerId: req.params.instellerId, orderStatus: "Complete" }).exec();
+    return res.status(200).send({ status: true, message: "Success", data: orders });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
+  }
+};
+exports.acceptInvitation = async (req, res) => {
+  try {
+    const order = await Order.findById(req.body.orderId).exec();
+    if (!order) {
+      return res.status(404).send({ status: false, message: `No order found with ID ${req.body.orderId}`, });
+    } else {
+      let update = await Order.findByIdAndUpdate({ _id: order._id }, { $set: { instellerId: req.params.instellerId, orderStatus: "Accept", instellers: [] } }, { new: true })
+      return res.status(200).send({ status: true, message: "Success", data: update });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
+  }
+};
+exports.rejectInvitation = async (req, res) => {
+  try {
+    const order = await Order.findById(req.body.orderId).exec();
+    if (!order) {
+      return res.status(404).send({ status: false, message: `No order found with ID ${req.body.orderId}`, });
+    } else {
+      let update = await Order.findByIdAndUpdate({ _id: order._id }, { $pull: { instellers: req.params.instellerId } }, { new: true })
+      return res.status(200).send({ status: true, message: "Success", data: update });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
+  }
+};

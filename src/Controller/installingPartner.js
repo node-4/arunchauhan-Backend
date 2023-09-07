@@ -20,6 +20,14 @@ exports.getAllPartners = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 }
+exports.getAllPartnersByInstaller = async (req, res) => {
+  try {
+    const partners = await InstallingPartner.findOne({ instellers: req.params.instellers });
+    res.json(partners);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
 
 exports.getPartnerById = async (req, res) => {
   try {
