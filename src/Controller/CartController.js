@@ -39,13 +39,13 @@ exports.addToCart = async (req, res, next) => {
 exports.getCart = async (req, res, next) => {
   try {
     const cart = await Cart.findOne({ user: req.user._id });
-    console.log(cart)
-    const cartResponse = await getCartResponse(cart);
-    return res.status(200).json({
-      success: true,
-      msg: "cart",
-      cart: cartResponse
-    })
+    console.log(req.user._id)
+    if (!cart) {
+      return res.status(200).json({ success: false, msg: "cart", cart: {} })
+    } else {
+      const cartResponse = await getCartResponse(cart);
+      return res.status(200).json({ success: true, msg: "cart", cart: cartResponse })
+    }
   } catch (error) {
     console.log(error)
     next(error);
