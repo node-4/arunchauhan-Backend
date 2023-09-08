@@ -16,5 +16,7 @@ router.get('/getBooking/:instellerId', order.getUpcommingBooking);
 router.get('/getOrder/:instellerId', order.getBooking);
 router.put('/acceptInvitation/:instellerId', order.acceptInvitation);
 router.put('/rejectInvitation/:instellerId', order.rejectInvitation);
+router.post('/rating/:orderId', order.giveRating);
+router.get('/rating/:instellerId', order.ratingList);
 
 module.exports = router;

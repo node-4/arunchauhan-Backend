@@ -120,6 +120,13 @@ const orderSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "insteller",
   },
+  installerReviewId: {
+    type: Schema.Types.ObjectId,
+    ref: "installerReview",
+  },
+  reviewDone: {
+    type: String
+  },
   paymentStatus: {
     type: String
   },

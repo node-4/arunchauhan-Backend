@@ -1,6 +1,7 @@
 const Order = require("../Models/order");
 const Cart = require("../Models/Cart");
 const installer = require("../Models/installer_auth");
+const installerReview = require("../Models/installerReview");
 
 exports.createOrder = async (req, res) => {
   try {
@@ -361,6 +362,38 @@ exports.rejectInvitation = async (req, res) => {
       let update = await Order.findByIdAndUpdate({ _id: order._id }, { $pull: { instellers: req.params.instellerId } }, { new: true })
       return res.status(200).send({ status: true, message: "Success", data: update });
     }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
+  }
+};
+
+exports.giveRating = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.orderId);
+    if (!order) {
+      return res.status(404).send({ status: false, message: `No order found with ID ${req.body.orderId}`, });
+    } else {
+      let obj = {
+        userId: order.user,
+        instellerId: order.instellerId,
+        OrderId: order._id,
+        message: req.body.message,
+        rating: req.body.rating
+      }
+      let save = await installerReview.create(obj);
+      return res.status(200).send({ status: true, message: "Success", data: save });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message });
+  }
+};
+
+exports.ratingList = async (req, res) => {
+  try {
+    const orders = await installerReview.find({ instellerId: req.params.instellerId }).populate('userId instellerId OrderId').sort({ createdAt: -1 }).exec();
+    return res.status(200).send({ status: true, message: "Success", data: orders });
   } catch (err) {
     console.log(err.message);
     return res.status(500).send({ msg: "internal server error ", error: err.message });
