@@ -323,7 +323,7 @@ exports.getAllPaidOrder = async (req, res) => {
 
 exports.getInvitation = async (req, res) => {
   try {
-    const orders = await Order.find({ instellers: { $in: req.params.instellerId }, orderType: "Service", orderStatus: "Pending" }).exec();
+    const orders = await Order.find({ instellers: { $in: req.params.instellerId }, orderType: "Service", orderStatus: "Pending" }).populate('user services.services').sort({ createdAt: -1 }).exec();
     return res.status(200).send({ status: true, message: "Success", data: orders });
   } catch (err) {
     console.log(err.message);
@@ -341,7 +341,7 @@ exports.getUpcommingBooking = async (req, res) => {
 };
 exports.getBooking = async (req, res) => {
   try {
-    const orders = await Order.find({ instellerId: req.params.instellerId, orderStatus: "Complete" }).exec();
+    const orders = await Order.find({ instellerId: req.params.instellerId, orderStatus: "Complete" }).populate('user services.services').sort({ createdAt: -1 }).exec();
     return res.status(200).send({ status: true, message: "Success", data: orders });
   } catch (err) {
     console.log(err.message);

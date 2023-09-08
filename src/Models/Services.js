@@ -3,11 +3,9 @@ const { model, Schema } = require('mongoose');
 const servicesSchema = new Schema({
 	serviceName: {
 		type: String,
-		required: true
 	},
 	serviceImg: {
 		type: String,
-		default: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZHVjdHN8ZW58MHx8MHx8&w=1000&q=80"
 	},
 	serviceTypeId: {
 		type: Schema.Types.ObjectId,
@@ -50,7 +48,68 @@ const servicesSchema = new Schema({
 	sellerId: {
 		type: Schema.Types.ObjectId,
 		ref: "seller"
-	}
+	},
+	realPrice: {
+		type: Number,
+	},
+	pickupCharge: {
+		type: String,
+	},
+	time: {
+		type: String,
+	},
+	ratings: {
+		type: Number,
+		default: 0,
+	},
+
+	numOfReviews: {
+		type: Number,
+		default: 0,
+	},
+	reviews: [
+		{
+			user: {
+				type: Schema.Types.ObjectId,
+				ref: "User",
+				required: true,
+			},
+			name: {
+				type: String,
+				required: true,
+			},
+			rating: {
+				type: Number,
+				required: true,
+			},
+			comment: {
+				type: String,
+				required: true,
+			},
+		},
+	],
+	periodicServiceImg: {
+		filename: {
+			type: String,
+			default: null
+		},
+		filesize: {
+			type: String,
+			default: null
+		},
+		filetype: {
+			type: String,
+			default: null
+		},
+		url: {
+			type: String,
+			required: null
+		}
+
+	},
+	serviceType: {
+		type: String,
+	},
 },
 	{
 		timestamps: true

@@ -1,8 +1,8 @@
-const { periodicService } = require('../Models')
+const { services } = require('../Models')
 
 exports.addperiodicService = async (payload) => {
 	try {
-		const result = await new periodicService(payload)
+		const result = await new services(payload)
 		result.save()
 		if (result) {
 			return {
@@ -23,10 +23,9 @@ exports.addperiodicService = async (payload) => {
 		throw error
 	}
 }
-
 exports.getPeriodicService = async () => {
 	try {
-		const result = await periodicService.find({})
+		const result = await services.find({ serviceType: "Perodic" })
 		if (result) {
 			return {
 				success: true,
@@ -49,7 +48,7 @@ exports.getPeriodicService = async () => {
 }
 exports.getPeriodicServiceById = async (payload) => {
 	try {
-		const result = await periodicService.findById({_id:payload})
+		const result = await services.findById({ _id: payload })
 		if (result) {
 			return {
 				success: true,
@@ -70,11 +69,9 @@ exports.getPeriodicServiceById = async (payload) => {
 		throw error
 	}
 }
-
-
 exports.updatePeriodicService = async (periodicServiceId, payload) => {
 	try {
-		let result = await periodicService.findOneAndUpdate({ _id: periodicServiceId }, payload)
+		let result = await services.findOneAndUpdate({ _id: periodicServiceId }, payload)
 		if (result) {
 			return {
 				success: true,
@@ -95,9 +92,8 @@ exports.updatePeriodicService = async (periodicServiceId, payload) => {
 		throw error
 	}
 }
-
 exports.deletePeriodicService = async (periodicServiceId) => {
-	let result = await periodicService.findOneAndDelete({ _id: periodicServiceId })
+	let result = await services.findOneAndDelete({ _id: periodicServiceId })
 	if (result) {
 		return {
 			success: true,

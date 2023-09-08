@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { wallet, User } = require("../Models");
 const installer = require("../Models/installer_auth");
-const Skill = require("../Models/instellerSkill");
+const instellerSkill = require("../Models/instellerSkill");
+const skill = require("../Models/skill");
 const { AddOnResultInstance, AddOnResultPage, } = require("twilio/lib/rest/api/v2010/account/recording/addOnResult");
 
 exports.sendOTP = async (req, res) => {

@@ -1,5 +1,5 @@
 const { PeriodicServiceService } = require('../Service');
-const { periodicService } = require('../Models');
+const { services } = require('../Models');
 const catchAsyncErrors = require("../MiddleWare/CatchAsyncErrors");
 // const ErrorHander = require("../MiddleWare/ErrorHandle");
 
@@ -16,6 +16,7 @@ exports.addPeriodicService = async (req, res) => {
 
       payload.periodicServiceImg = periodicServiceImg
     }
+    payload.serviceType = "Perodic";
     const result = await PeriodicServiceService.addperiodicService(payload)
     if (result) {
       return res.status(result.status).json({
@@ -128,7 +129,7 @@ exports.createPeriodicServiceReview = catchAsyncErrors(async (req, res, next) =>
     comment,
   };
 
-  const PeriodicService = await periodicService.findById(periodicServiceId);
+  const PeriodicService = await services.findById(periodicServiceId);
   // console.log("PeriodicService",PeriodicService)
 
   const isReviewed = PeriodicService.reviews.find(
@@ -154,7 +155,7 @@ exports.createPeriodicServiceReview = catchAsyncErrors(async (req, res, next) =>
 
   PeriodicService.ratings = avg / PeriodicService.reviews.length;
 
-  await PeriodicService.save({ validateBeforeSave: false });
+  await services.save({ validateBeforeSave: false });
 
   res.status(200).json({
     success: true,
@@ -162,7 +163,7 @@ exports.createPeriodicServiceReview = catchAsyncErrors(async (req, res, next) =>
   });
 });
 exports.getPeriodicServiceReviews = catchAsyncErrors(async (req, res, next) => {
-  const PeriodicService = await periodicService.findById(req.query.id);
+  const PeriodicService = await services.findById(req.query.id);
 
   if (!PeriodicService) {
     return next(new ErrorHander("service not found", 404));
@@ -174,7 +175,7 @@ exports.getPeriodicServiceReviews = catchAsyncErrors(async (req, res, next) => {
   });
 });
 exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
-  const PeriodicService = await periodicService.findById(req.query.periodicServiceId);
+  const PeriodicService = await services.findById(req.query.periodicServiceId);
 
   if (!PeriodicService) {
     return next(new ErrorHander("Service not found", 404));
@@ -199,7 +200,7 @@ exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
 
   const numOfReviews = reviews.length;
 
-  await periodicService.findByIdAndUpdate(
+  await services.findByIdAndUpdate(
     req.query.periodicServiceId,
     {
       reviews,

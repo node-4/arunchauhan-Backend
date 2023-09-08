@@ -72,7 +72,6 @@ const getCartResponse = async (cart) => {
     if (cartResponse.coupon) {
       discount = 0.01 * cart.coupon.discount * total;
     }
-
     cartResponse.subTotal = total;
     cartResponse.discount = discount;
     cartResponse.total = total - discount;
