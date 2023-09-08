@@ -15,7 +15,18 @@ exports.createOrder = async (req, res) => {
           const productPrice = product.product.price * product.quantity;
           totalPrice += productPrice;
         }
-        const order = { user: userId, product: cart.products, totalPrice: totalPrice, quantity: cart.products.length, };
+        let products = [];
+        for (const product of cart.products) {
+          let obj = {
+            product: product.product._id,
+            quantity: product.quantity,
+            price: product.product.price
+          }
+          services.push(obj)
+          const productPrice = product.product.price * product.quantity;
+          totalPrice += productPrice;
+        }
+        const order = { user: userId, products: products, totalPrice: totalPrice, quantity: cart.products.length, };
         const shippingAddress = {
           address: req.body.address,
           city: req.body.city,
@@ -36,11 +47,18 @@ exports.createOrder = async (req, res) => {
             instellers.push(findInstaller[i]._id)
           }
         }
+        let services = [];
         for (const product of cart.services) {
           const productPrice = product.services.price * product.quantity;
+          let obj = {
+            services: product.services._id,
+            quantity: product.quantity,
+            price: product.services.price
+          }
+          services.push(obj)
           totalPrice += productPrice;
         }
-        const order = { user: userId, services: cart.services, totalPrice: totalPrice, quantity: cart.services.length, };
+        const order = { user: userId, services: services, totalPrice: totalPrice, quantity: cart.services.length, };
         const shippingAddress = {
           address: req.body.address,
           city: req.body.city,
@@ -50,6 +68,7 @@ exports.createOrder = async (req, res) => {
         order.shippingAddress = shippingAddress;
         order.grandTotal = totalPrice;
         order.orderType = "Service"
+        order.orderStatus = "Pending"
         order.instellers = instellers
         const result = await Order.create(order);
         return res.status(201).send({ status: true, message: "Success", data: result });
@@ -313,7 +332,7 @@ exports.getInvitation = async (req, res) => {
 };
 exports.getUpcommingBooking = async (req, res) => {
   try {
-    const orders = await Order.find({ instellerId: req.params.instellerId, orderStatus: "Accept" }).exec();
+    const orders = await Order.find({ instellerId: req.params.instellerId, orderStatus: "Accept" }).populate('user services.services').sort({ createdAt: -1 }).exec();
     return res.status(200).send({ status: true, message: "Success", data: orders });
   } catch (err) {
     console.log(err.message);

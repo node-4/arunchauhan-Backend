@@ -24,7 +24,7 @@ const orderSchema = new Schema({
   }],
 
   services: [{
-    product: {
+    services: {
       type: Schema.Types.ObjectId,
       ref: "Services",
     },

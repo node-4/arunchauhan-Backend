@@ -1,8 +1,6 @@
 const { model, Schema } = require('mongoose');
 
 const servicesSchema = new Schema({
-
-
 	serviceName: {
 		type: String,
 		required: true
@@ -15,37 +13,36 @@ const servicesSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		required: false,
 		ref: "servicetype"
-
 	},
 	title: {
 		type: String
-	}, 
+	},
 	price: {
-		type: String, 
-	}, 
+		type: String,
+	},
 	discount: {
-		type : String, 
+		type: String,
 		default: 0
 	},
 	desc: {
 		type: String
 	},
-	include: [], 
+	include: [],
 	reting: {
 		type: String
 	},
-	  freeService: {
+	freeService: {
 		type: String
-	  }, 
-	  category: {
-		type: Schema.Types.ObjectId, 
+	},
+	category: {
+		type: Schema.Types.ObjectId,
 		ref: "category"
-	  }, 
-	  status: {
-		type: String, 
+	},
+	status: {
+		type: String,
 		default: false
 	},
-	subCategory : {
+	subCategory: {
 		type: Schema.Types.ObjectId,
 		required: true,
 		ref: "subCatgory"
