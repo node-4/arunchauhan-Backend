@@ -104,6 +104,7 @@ exports.UpdateProfile = async (req, res) => {
       Emin: req.body.endMin,
       Esec: req.body.Esec,
     };
+    result.orderAcceptance = req.body.orderAcceptance;
     result.save();
     return res.status(200).json({
       message: "ok",
@@ -225,6 +226,32 @@ exports.addSubskillForuser = async (req, res) => {
       if (findsubSkill) {
         if (!findSkill1.subSkill.includes(req.body.subSkillId)) {
           let SaveinstellerSkill = await instellerSkill.findByIdAndUpdate({ _id: findSkill1._id, }, { $push: { subSkill: req.body.subSkillId } }, { new: true });
+          if (SaveinstellerSkill) {
+            return res.status(200).send({ status: 200, msg: "Sub Skill add successfully." });
+          }
+        } else {
+          return res.status(200).send({ status: 200, msg: "Sub Skill add successfully." });
+        }
+      } else {
+        return res.status(404).send({ status: 404, msg: "Sub Skill not found" });
+
+      }
+    } else {
+      return res.status(404).send({ status: 404, msg: "Insteller Skill not found" });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message, });
+  }
+};
+exports.removeSubskillForuser = async (req, res) => {
+  try {
+    let findSkill1 = await instellerSkill.findById({ _id: req.params.id })
+    if (findSkill1) {
+      let findsubSkill = await subSkill.findOne({ _id: req.body.subSkillId });
+      if (findsubSkill) {
+        if (findSkill1.subSkill.includes(req.body.subSkillId)) {
+          let SaveinstellerSkill = await instellerSkill.findByIdAndUpdate({ _id: findSkill1._id, }, { $pull: { subSkill: req.body.subSkillId } }, { new: true });
           if (SaveinstellerSkill) {
             return res.status(200).send({ status: 200, msg: "Sub Skill add successfully." });
           }

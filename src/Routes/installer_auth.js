@@ -13,10 +13,9 @@ router.post('/services/:id', installer.AddServices);
 router.delete('/:id', installer.DeleteInsteller);
 router.get('/all', installer.getAllInstaller);
 router.get('/:id', installer.getByInstallerId);
-
-
 router.post('/add/skillForuser', installer.addskillForuser);
 router.post('/add/SubskillForuser/:id', installer.addSubskillForuser);
+router.post('/remove/SubskillForuser/:id', installer.removeSubskillForuser);
 router.get('/get/skillForuser/:installerId', installer.getskillForuser);
 router.get('/get/subSkillForuser/:id', installer.getsubSkillForuser);
 
