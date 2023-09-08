@@ -1,13 +1,18 @@
 const { model, Schema } = require("mongoose");
 
 const SkillSchema = new Schema({
-        sellerId: {
+        installerId: {
                 type: Schema.Types.ObjectId,
                 ref: "insteller"
         },
-        skills: {
-                type: Array
-        }
+        skillId: {
+                type: Schema.Types.ObjectId,
+                ref: "skill"
+        },
+        subSkill: [{
+                type: Schema.Types.ObjectId,
+                ref: "subSkill"
+        }]
 }, {
         timestamps: true
 })

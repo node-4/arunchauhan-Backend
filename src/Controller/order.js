@@ -79,7 +79,6 @@ exports.createOrder = async (req, res) => {
     return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
-
 // // ---------------------------------- Update Order ------------------------------------------------------
 
 // const Order = require("../Models/order");
@@ -106,8 +105,6 @@ exports.getAllOrdersByToken = async (req, res) => {
     return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
-
-// Get order by ID API
 exports.getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).exec();
@@ -123,8 +120,6 @@ exports.getOrderById = async (req, res) => {
     return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
-
-// Update order API
 exports.updateOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).exec();
@@ -154,8 +149,6 @@ exports.updateOrder = async (req, res) => {
     return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
-
-// Delete order API
 exports.deleteOrder = async (req, res) => {
   try {
     const order = await Order.findByIdAndDelete(req.params.id).exec();
@@ -171,7 +164,6 @@ exports.deleteOrder = async (req, res) => {
     return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
-
 exports.getAllPaidOrder = async (req, res) => {
   try {
     const orders = await Order.find()
@@ -239,7 +231,6 @@ exports.getAllPaidOrder = async (req, res) => {
     return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
-
 // const updateOrder = async (req, res) => {
 //   try {
 //       let userId = req.params.userId;
@@ -320,7 +311,6 @@ exports.getAllPaidOrder = async (req, res) => {
 // }
 
 // module.exports={createOrder,updateOrder}
-
 exports.getInvitation = async (req, res) => {
   try {
     const orders = await Order.find({ instellers: { $in: req.params.instellerId }, orderType: "Service", orderStatus: "Pending" }).populate('user services.services').sort({ createdAt: -1 }).exec();

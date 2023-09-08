@@ -4,6 +4,7 @@ const { wallet, User } = require("../Models");
 const installer = require("../Models/installer_auth");
 const instellerSkill = require("../Models/instellerSkill");
 const skill = require("../Models/skill");
+const subSkill = require("../Models/subSkill");
 const { AddOnResultInstance, AddOnResultPage, } = require("twilio/lib/rest/api/v2010/account/recording/addOnResult");
 
 exports.sendOTP = async (req, res) => {
@@ -28,7 +29,6 @@ exports.sendOTP = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -50,7 +50,6 @@ exports.login = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 exports.verifyOTP = async (req, res) => {
   try {
     const { otpSecret } = req.body;
@@ -89,7 +88,6 @@ exports.verifyOTP = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 exports.UpdateProfile = async (req, res) => {
   try {
     const result = await installer.findById({ _id: req.params.id });
@@ -115,7 +113,6 @@ exports.UpdateProfile = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 exports.DeleteInsteller = async (req, res) => {
   try {
     await installer.findByIdAndDelete({ _id: req.params.id });
@@ -129,7 +126,6 @@ exports.DeleteInsteller = async (req, res) => {
     });
   }
 };
-
 exports.Address = async (req, res) => {
   try {
     const result = await installer.findById({ _id: req.params.id });
@@ -151,7 +147,6 @@ exports.Address = async (req, res) => {
     });
   }
 };
-
 exports.AddServices = async (req, res) => {
   try {
     const result = await installer.findById({ _id: req.params.id });
@@ -168,7 +163,6 @@ exports.AddServices = async (req, res) => {
     });
   }
 };
-
 exports.getAllInstaller = async (req, res) => {
   try {
     const result = await installer.find();
@@ -183,7 +177,6 @@ exports.getAllInstaller = async (req, res) => {
     });
   }
 };
-
 exports.getByInstallerId = async (req, res) => {
   try {
     const result = await installer.findById({ _id: req.params.id });
@@ -196,5 +189,83 @@ exports.getByInstallerId = async (req, res) => {
     return res.status(400).json({
       message: err.message,
     });
+  }
+};
+exports.addskillForuser = async (req, res) => {
+  try {
+    let findSkill = await skill.findById({ _id: req.body.skillId });
+    if (findSkill) {
+      let findSkill1 = await instellerSkill.findOne({ skillId: req.body.skillId, installerId: req.body.installerId });
+      if (findSkill1) {
+        return res.status(409).send({ status: 409, msg: "Skill Already add." });
+      } else {
+        let obj = {
+          installerId: req.body.installerId,
+          skillId: findSkill._id,
+        }
+        let SaveinstellerSkill = await instellerSkill.create(obj);
+        if (SaveinstellerSkill) {
+          return res.status(200).send({ status: 200, msg: "Skill add successfully.", data: SaveinstellerSkill });
+        }
+      }
+
+    } else {
+      return res.status(404).send({ status: 404, msg: "Skill not found" });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message, });
+  }
+};
+exports.addSubskillForuser = async (req, res) => {
+  try {
+    let findSkill1 = await instellerSkill.findById({ _id: req.params.id })
+    if (findSkill1) {
+      let findsubSkill = await subSkill.findOne({ _id: req.body.subSkillId });
+      if (findsubSkill) {
+        if (!findSkill1.subSkill.includes(req.body.subSkillId)) {
+          let SaveinstellerSkill = await instellerSkill.findByIdAndUpdate({ _id: findSkill1._id, }, { $push: { subSkill: req.body.subSkillId } }, { new: true });
+          if (SaveinstellerSkill) {
+            return res.status(200).send({ status: 200, msg: "Sub Skill add successfully." });
+          }
+        } else {
+          return res.status(200).send({ status: 200, msg: "Sub Skill add successfully." });
+        }
+      } else {
+        return res.status(404).send({ status: 404, msg: "Sub Skill not found" });
+
+      }
+    } else {
+      return res.status(404).send({ status: 404, msg: "Insteller Skill not found" });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message, });
+  }
+};
+exports.getskillForuser = async (req, res) => {
+  try {
+    let findSkill1 = await instellerSkill.find({ installerId: req.params.installerId }).populate('skillId').select('skillId');
+    if (!findSkill1) {
+      return res.status(404).send({ status: 404, msg: "User Skill not found successfully.", data: [] });
+    } else {
+      return res.status(200).send({ status: 200, msg: "User Skill found successfully.", data: findSkill1 });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message, });
+  }
+};
+exports.getsubSkillForuser = async (req, res) => {
+  try {
+    let findSkill1 = await instellerSkill.findById({ _id: req.params.id }).populate('skillId subSkill').select('skillId subSkill');
+    if (!findSkill1) {
+      return res.status(404).send({ status: 404, msg: "User Skill not found successfully.", data: [] });
+    } else {
+      return res.status(200).send({ status: 200, msg: "User Skill found successfully.", data: findSkill1 });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message, });
   }
 };

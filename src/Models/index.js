@@ -15,7 +15,10 @@ module.exports = {
 	accessories: require('./Accessories'),
 	Cart: require('./Cart'),
 	Coupon: require('./Coupon'),
-	userCard: require('./Card')
+	userCard: require('./Card'),
+	skill: require('./skill'),
+	subSkill: require('./subSkill'),
+	instellerSkill: require('./instellerSkill'),
 
 
 }

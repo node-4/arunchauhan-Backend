@@ -10,6 +10,6 @@ module.exports = {
 	ServicesService: require('./ServicesService'),
 	PeriodicServiceService: require('./PeriodicService'),
 	SellerService: require('./SellerService'),
-	AccessoriesService:require('./AccessoriesService')
-
+	AccessoriesService: require('./AccessoriesService'),
+	skillService: require('./skillService')
 }
