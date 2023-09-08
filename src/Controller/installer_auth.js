@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { wallet, User } = require("../Models");
+const { wallet, User, transactionModel } = require("../Models");
 const installer = require("../Models/installer_auth");
 const instellerSkill = require("../Models/instellerSkill");
 const skill = require("../Models/skill");
@@ -294,5 +294,91 @@ exports.getsubSkillForuser = async (req, res) => {
   } catch (err) {
     console.log(err.message);
     return res.status(500).send({ msg: "internal server error ", error: err.message, });
+  }
+};
+
+exports.getWallet = async (req, res) => {
+  try {
+    let findSkill1 = await wallet.findOne({ installer: req.params.installerId, user_type: "installer", });
+    if (!findSkill1) {
+      return res.status(404).send({ status: 404, msg: "Wallet not found successfully.", data: 0 });
+    } else {
+      return res.status(200).send({ status: 200, msg: "Wallet get successfully.", data: findSkill1 });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send({ msg: "internal server error ", error: err.message, });
+  }
+};
+exports.allTransactionUser = async (req, res) => {
+  try {
+    const data = await transactionModel.find({ installer: req.params.installerId }).populate("orderId");
+    if (data.length > 0) {
+      return res.status(200).json({ status: 200, message: "Data found successfully.", data: data });
+    } else {
+      return res.status(404).json({ status: 404, message: "Data not found.", data: {} });
+    }
+
+  } catch (err) {
+    return res.status(400).json({ message: err.message });
+  }
+};
+exports.removeMoney = async (req, res) => {
+  try {
+    let findSkill1 = await wallet.findOne({ installer: req.params.installerId, user_type: "installer", });
+    if (!findSkill1) {
+      return res.status(404).send({ status: 404, msg: "Wallet not found successfully.", data: 0 });
+    } else {
+      if (findSkill1.balance >= parseInt(req.body.balance)) {
+        let update = await wallet.findByIdAndUpdate({ _id: findSkill1._id }, { $set: { balance: findSkill1.balance - parseInt(req.body.balance) } }, { new: true });
+        if (update) {
+          const date = new Date();
+          let month = date.getMonth() + 1;
+          let obj = {
+            installer: req.params.installerId,
+            date: date,
+            month: month,
+            amount: req.body.balance,
+            type: "Debit",
+          };
+          const data1 = await transactionModel.create(obj);
+          if (data1) {
+            return res.status(200).json({ status: 200, message: "Money has been deducted.", data: data1, });
+          }
+        }
+      } else {
+        return res.status(404).send({ status: 404, msg: "Low balance.", data: 0 });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(501).send({ status: 501, message: "server error.", data: {}, });
+  }
+};
+exports.addCommission = async (req, res) => {
+  try {
+    let findSkill1 = await wallet.findOne({ installer: req.params.installerId, user_type: "installer", });
+    if (!findSkill1) {
+      return res.status(404).send({ status: 404, msg: "Wallet not found successfully.", data: 0 });
+    } else {
+      let update = await wallet.findByIdAndUpdate({ _id: findSkill1._id }, { $set: { balance: findSkill1.balance + parseInt(req.body.balance) } }, { new: true });
+      const date = new Date();
+      let month = date.getMonth() + 1;
+      let obj = {
+        installer: req.params.installerId,
+        orderId: req.body.orderId,
+        date: date,
+        month: month,
+        amount: req.body.balance,
+        type: "Credit",
+      };
+      const data1 = await transactionModel.create(obj);
+      if (data1) {
+        return res.status(200).json({ status: 200, message: "Money has been deducted.", data: data1, });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(501).send({ status: 501, message: "server error.", data: {}, });
   }
 };

@@ -19,5 +19,9 @@ router.post('/remove/SubskillForuser/:id', installer.removeSubskillForuser);
 router.get('/get/skillForuser/:installerId', installer.getskillForuser);
 router.get('/get/subSkillForuser/:id', installer.getsubSkillForuser);
 
+router.get('/get/Wallet/:installerId', installer.getWallet);
+router.get('/get/transaction/:installerId', installer.allTransactionUser);
+router.post('/Wallet/removeMoney/:installerId', installer.removeMoney);
+router.post('/Wallet/addCommission/:installerId', installer.addCommission);
 
 module.exports = router;

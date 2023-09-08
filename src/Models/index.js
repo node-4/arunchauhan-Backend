@@ -19,6 +19,6 @@ module.exports = {
 	skill: require('./skill'),
 	subSkill: require('./subSkill'),
 	instellerSkill: require('./instellerSkill'),
-
+	transactionModel: require('./transactionModel')
 
 }

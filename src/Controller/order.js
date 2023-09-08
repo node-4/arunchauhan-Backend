@@ -2,6 +2,8 @@ const Order = require("../Models/order");
 const Cart = require("../Models/Cart");
 const installer = require("../Models/installer_auth");
 const installerReview = require("../Models/installerReview");
+const wallet = require("../Models/Wallet");
+const transactionModel = require("../Models/transactionModel");
 
 exports.createOrder = async (req, res) => {
   try {
@@ -367,7 +369,6 @@ exports.rejectInvitation = async (req, res) => {
     return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
-
 exports.giveRating = async (req, res) => {
   try {
     const order = await Order.findById(req.params.orderId);
@@ -389,7 +390,6 @@ exports.giveRating = async (req, res) => {
     return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
-
 exports.ratingList = async (req, res) => {
   try {
     const orders = await installerReview.find({ instellerId: req.params.instellerId }).populate('userId instellerId OrderId').sort({ createdAt: -1 }).exec();
