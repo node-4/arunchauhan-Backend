@@ -11,6 +11,7 @@ router.get('/bytoken', requireSignin, review.getAllbyToken);
 router.get('/:id', review.getReviewById)
 router.put('/:id', review.updateReview)
 router.delete('/:id', review.deleteReview)
+router.post('/:id', review.changeStatus)
 
 
 

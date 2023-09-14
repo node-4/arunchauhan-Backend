@@ -74,3 +74,22 @@ exports.deleteReview = async (req, res) => {
   }
 };
 
+exports.changeStatus = async (req, res) => {
+  try {
+    const Review = await review.findById(req.params.id);
+    if (Review) {
+      if (Review.status == false) {
+        const Review1 = await review.findByIdAndUpdate(req.params.id, { $set: { status: true } }, { new: true, });
+        return res.status(200).send(Review1);
+      } else {
+        const Review1 = await review.findByIdAndUpdate(req.params.id, { $set: { status: false } }, { new: true, });
+        return res.status(200).send(Review1);
+      }
+    } else {
+      return res.status(200).send(Review);
+    }
+
+  } catch (error) {
+    console.error('Error updating review:', error);
+  }
+};

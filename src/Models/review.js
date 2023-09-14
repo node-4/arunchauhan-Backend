@@ -14,6 +14,10 @@ const review = mongoose.Schema({
     rating: {
         type: Number,
         default: 1
+    },
+    status: {
+        type: Boolean,
+        default: false
     }
 })
 
