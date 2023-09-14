@@ -110,7 +110,7 @@ exports.getAllOrdersByToken = async (req, res) => {
 };
 exports.getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id).exec();
+    const order = await Order.findById(req.params.id).populate('user services.services products.product').exec();
     if (!order) {
       return res.status(404).send({
         status: false,
