@@ -8,25 +8,19 @@ exports.adminSignup = async (payload) => {
 	try {
 		payload.password = await passwordHelper.hashPassword(payload.password, 10);
 		console.log(payload.password)
-		const result = await new admin(payload)
-		result.save()
-		if (result) {
-			const token = await tokenHelper.generateToken(result, 'login');
-			return {
-				success: true,
-				status: 200,
-				data: result,
-				access_token: token,
-				message: 'You Are Successfully Signup'
+		let user = await admin.findOne({ email: payload.email });
+		if (!user) {
+			const result = await new admin(payload)
+			result.save()
+			if (result) {
+				const token = await tokenHelper.generateToken(result, 'login');
+				return { success: true, status: 200, data: result, access_token: token, message: 'You Are Successfully Signup' }
+			} else {
+				return { success: false, status: 400, message: "Somethng Went Wrong" }
 			}
 		} else {
-			return {
-				success: false,
-				status: 400,
-				message: "Somethng Went Wrong"
-			}
+			return { success: false, status: 409, data: user, message: 'Email already exit' }
 		}
-
 	} catch (error) {
 		console.log(error)
 		throw error
