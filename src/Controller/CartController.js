@@ -17,7 +17,8 @@ exports.addToCart = async (req, res, next) => {
       if (cart.services.length == 0) {
         const productIndex = cart.products.findIndex((cartProduct) => { return cartProduct.product.toString() == product; });
         if (productIndex < 0) {
-          cart.products.push({ product });
+          let obj = { product: product, quantity: 1 };
+          cart.products.push(obj);
         } else {
           cart.products[productIndex].quantity++;
         }
@@ -84,20 +85,20 @@ const getCartResponse = async (cart) => {
 };
 exports.addServiceToCart = async (req, res, next) => {
   try {
-    const services = req.params.id;
+    const serviceId = req.params.id;
     let cart = await Cart.findOne({ user: req.user._id, });
     if (!cart) {
       let services = [];
-      let obj = { services: services, quantity: 1 };
+      let obj = { services: serviceId, quantity: 1 };
       services.push(obj)
       cart = await Cart.create({ user: req.user._id, services: services });
       return res.status(200).json({ msg: "service added to cart", data: cart });
     } else {
       if (cart.products.length == 0) {
-        const productIndex = cart.services.findIndex((cartService) => { return cartService.services.toString() == services; });
-        console.log(productIndex);
+        const productIndex = cart.services.findIndex((cartService) => { return cartService.services.toString() == serviceId; });
         if (productIndex < 0) {
-          cart.services.push({ services });
+          let obj = { services: serviceId, quantity: 1 };
+          cart.services.push(obj);
         } else {
           cart.services[productIndex].quantity++;
         }
@@ -109,6 +110,7 @@ exports.addServiceToCart = async (req, res, next) => {
     }
 
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };
