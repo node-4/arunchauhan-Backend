@@ -25,7 +25,7 @@ exports.createOrder = async (req, res) => {
             quantity: product.quantity,
             price: product.product.price
           }
-          services.push(obj)
+          products.push(obj)
           const productPrice = product.product.price * product.quantity;
           totalPrice += productPrice;
         }
@@ -78,7 +78,7 @@ exports.createOrder = async (req, res) => {
       }
     }
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
     return res.status(500).send({ msg: "internal server error ", error: err.message });
   }
 };
