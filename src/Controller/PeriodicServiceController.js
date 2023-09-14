@@ -13,7 +13,7 @@ exports.addPeriodicService = async (req, res) => {
         filesize: req.file.size,
         url: req.file.path
       }
-
+      console.log(periodicServiceImg);
       payload.periodicServiceImg = periodicServiceImg
     }
     payload.serviceType = "Perodic";
