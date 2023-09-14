@@ -10,7 +10,7 @@ exports.addProduct = async (req, res) => {
 					filename: file.filename,
 					filesize: file.size,
 					filetype: file.mimetype,
-					url: req.file.path
+					url: file.path
 				}
 			})
 			payload.productImg = img
