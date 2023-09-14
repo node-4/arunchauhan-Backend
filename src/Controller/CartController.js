@@ -112,3 +112,17 @@ exports.addServiceToCart = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.deleteCart = async (req, res, next) => {
+  try {
+    let cart = await Cart.findOne({ user: req.user._id, });
+    if (!cart) {
+      return res.status(200).json({ msg: "cart not found.", data: cart });
+    } else {
+      const order = await Cart.findByIdAndDelete({ _id: cart._id })
+      return res.status(200).json({ msg: "Cart  delete successfully.", });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
