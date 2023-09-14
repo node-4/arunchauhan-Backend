@@ -91,7 +91,7 @@ exports.createOrder = async (req, res) => {
 // Get all orders API
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().exec();
+    const orders = await Order.find().populate('user services.services products.product').exec();
     return res.status(200).send({ status: true, message: "Success", data: orders });
   } catch (err) {
     console.log(err.message);
